@@ -131,7 +131,8 @@ class APIServer:
                     "system_metrics": system_metrics,
                     "update_available": getattr(self.brain, 'update_available', False),
                     "stitch_usage_monthly": stitch_usage_monthly,
-                    "security_events": security_events
+                    "security_events": security_events,
+                    "sync_enabled": getattr(self.brain, 'sync_enabled', False)
                 }
             except Exception as e:
                 import traceback
@@ -208,6 +209,18 @@ class APIServer:
                 import traceback
                 logging.error(f"Error en /sync/import: {traceback.format_exc()}")
                 return {"status": "error", "message": str(e)}
+
+        @self.app.post("/api/v1/sync/toggle")
+        async def api_sync_toggle(request: Request):
+            try:
+                payload = await request.json()
+                enabled = payload.get('enabled', False)
+                self.brain.sync_enabled = enabled
+                status_str = "activada" if enabled else "desactivada"
+                logging.info(f"Sincronización P2P {status_str} por el usuario.")
+                return {"status": "success", "sync_enabled": enabled}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
                 
     async def start(self):
         """Start the uvicorn server in the background and open browser."""
@@ -223,17 +236,18 @@ class APIServer:
             async def background_loop():
                 import asyncio
                 while True:
-                    logging.info("Core maintenance: Heartbeat & Peer Sync...")
-                    # Peer Sync
-                    try:
-                        from core.node_sync import NodeSynchronizer
-                        soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
-                        sync = NodeSynchronizer(soul_path)
-                        peers = sync.get_known_peers()
-                        for peer in peers:
-                            await sync.pull_from_peer(peer)
-                    except Exception as e:
-                        logging.error(f"Background Sync Error: {e}")
+                    if getattr(self.brain, 'sync_enabled', False):
+                        logging.info("Core maintenance: Heartbeat & Peer Sync...")
+                        # Peer Sync
+                        try:
+                            from core.node_sync import NodeSynchronizer
+                            soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
+                            sync = NodeSynchronizer(soul_path)
+                            peers = sync.get_known_peers()
+                            for peer in peers:
+                                await sync.pull_from_peer(peer)
+                        except Exception as e:
+                            logging.error(f"Background Sync Error: {e}")
                     
                     await asyncio.sleep(600) # Every 10 minutes
             

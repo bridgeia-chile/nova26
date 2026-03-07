@@ -92,6 +92,13 @@ async function updateStatus() {
                 updateBadge.classList.add('hidden');
             }
         }
+
+        // Update Sync Toggle
+        const syncToggle = document.getElementById('sync-toggle-checkbox');
+        if (syncToggle && document.activeElement !== syncToggle) {
+            syncToggle.checked = data.sync_enabled;
+        }
+
     } catch (err) {
         console.error("Error polling status:", err);
     }
@@ -163,6 +170,16 @@ function renderAgents(agents) {
                     </div>
                 </div>
                 
+                ${agent.id === 'agent-01' ? `
+                <div class="sync-toggle-container glass-card" style="margin-bottom: 10px; padding: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <span class="metric-label" style="font-size: 0.75rem;">Sincronización P2P</span>
+                    <label class="switch">
+                        <input type="checkbox" id="sync-toggle-checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                ` : ''}
+                
                 <div class="agent-task-area" style="margin-top: 5px;">
                     <span class="task-label" id="task-${agent.id}">${agent.task}</span>
                     <div class="task-content">CPU: <span id="cpu-${agent.id}">${agent.cpu}</span> | <span id="detail-${agent.id}">${agent.detail}</span></div>
@@ -179,6 +196,13 @@ function renderAgents(agents) {
                 changeAgentModel(agentId, newModel);
             });
         });
+        
+        const syncToggleCheckbox = document.getElementById('sync-toggle-checkbox');
+        if (syncToggleCheckbox) {
+            syncToggleCheckbox.addEventListener('change', (e) => {
+                toggleSync(e.target.checked);
+            });
+        }
     } else {
         // En lugar de recrear, actualizamos los valores de las tarjetas existentes en tiempo real.
         agents.forEach(agent => {
@@ -220,6 +244,20 @@ function renderAgents(agents) {
                 }
             }
         });
+    }
+}
+
+// Toggle Sync API Call
+async function toggleSync(enabled) {
+    try {
+        await fetch('/api/v1/sync/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled })
+        });
+        updateStatus(); // fast refresh
+    } catch(e) {
+        console.error("Error toggling sync:", e);
     }
 }
 
