@@ -47,6 +47,7 @@ const sysCpuEl = document.getElementById('sys-cpu');
 const sysRamEl = document.getElementById('sys-ram');
 const sysVramEl = document.getElementById('sys-vram');
 const stitchUsageEl = document.getElementById('stitch-usage');
+const securityStatusEl = document.getElementById('security-status');
 
 // Poll System Status
 async function updateStatus() {
@@ -61,6 +62,20 @@ async function updateStatus() {
         if (dbSizeEl) dbSizeEl.innerText = data.db_size || '0 KB';
         if (activeSessionsEl) activeSessionsEl.innerText = data.sessions_count || '0';
         if (stitchUsageEl) stitchUsageEl.innerText = data.stitch_usage_monthly || '0';
+        
+        // Security Status Logic
+        if (securityStatusEl) {
+            if (data.security_events && data.security_events.length > 0) {
+                const latest = data.security_events[0];
+                securityStatusEl.innerText = latest.severity === 'CRITICAL' ? 'ALERTA' : 'AVISO';
+                securityStatusEl.style.color = latest.severity === 'CRITICAL' ? '#ff4d4d' : '#ffa500';
+                securityStatusEl.title = `${latest.type}: ${latest.details}`;
+            } else {
+                securityStatusEl.innerText = 'OK';
+                securityStatusEl.style.color = '#00ff88';
+                securityStatusEl.title = 'Sistemas protegidos por Nova Sentry';
+            }
+        }
         
         if (data.system_metrics) {
             if (sysCpuEl) sysCpuEl.innerText = data.system_metrics.cpu_usage || '0%';

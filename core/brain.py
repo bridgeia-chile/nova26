@@ -11,6 +11,8 @@ from core.memory import MemoryManager
 from core.resource_manager import ResourceBudget
 from core.reasoning import Reasoner
 from llm.provider_manager import LLMProviderManager
+from core.sentry_monitor import SentryMonitor
+from tools.security_tools import SecurityTools
 
 class NovaGravityBrain:
     """Orquestador principal del agente."""
@@ -33,6 +35,8 @@ class NovaGravityBrain:
         self.current_mission = "Idle"
         self.last_action = "Iniciando..."
         self.update_available = False
+        self.sentry = SentryMonitor(soul_db_path)
+        self.security_tools = SecurityTools()
 
     async def boot(self, config_dir: str = 'config'):
         """Secuencia de arranque."""
@@ -85,6 +89,18 @@ class NovaGravityBrain:
                 await asyncio.sleep(3600) # Every hour manually for brain, or 600 for faster
         
         asyncio.create_task(check_updates_loop())
+        
+        # Background security monitoring
+        async def sentry_monitor_loop():
+            while self.is_alive:
+                try:
+                    await self.sentry.run_step()
+                except Exception as e:
+                    import logging
+                    logging.error(f"Sentry loop error: {e}")
+                await asyncio.sleep(60) # Passive check every 60 seconds
+        
+        asyncio.create_task(sentry_monitor_loop())
         
         return identity_state
 
@@ -313,6 +329,17 @@ class NovaGravityBrain:
                 else:
                     res = {"error": "Método de Web Search no reconocido."}
                 return {"response": str(res)}
+            
+            elif tool_name == "security_tools":
+                method = tool_input.get("method")
+                if method == "scan":
+                    return {"response": self.security_tools.scan_system()}
+                elif method == "harden":
+                    return {"response": self.security_tools.harden_system()}
+                elif method == "isolate":
+                    return {"response": self.security_tools.isolate_threat(tool_input.get("path"))}
+                else:
+                    return {"response": f"Método {method} no reconocido en security_tools."}
             
             elif tool_name.startswith("mcp_stitchmcp_"):
                 # Bridge to internal Stitch tools

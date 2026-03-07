@@ -112,9 +112,17 @@ class APIServer:
                     cursor = conn.cursor()
                     cursor.execute("SELECT COUNT(*) FROM stitch_usage WHERE timestamp > date('now','start of month')")
                     stitch_usage_monthly = cursor.fetchone()[0]
+                    
+                    # Fetch recent security events
+                    cursor.execute("SELECT event_type, severity, details, timestamp FROM security_events ORDER BY timestamp DESC LIMIT 5")
+                    security_events = [
+                        {"type": r[0], "severity": r[1], "details": r[2], "timestamp": r[3]}
+                        for r in cursor.fetchall()
+                    ]
                     conn.close()
                 except Exception as e:
-                    logging.error(f"Error calculating Stitch usage: {e}")
+                    logging.error(f"Error calculating Stitch usage or fetching security events: {e}")
+                    security_events = []
 
                 return {
                     "agents": sorted_agents,
@@ -122,7 +130,8 @@ class APIServer:
                     "sessions_count": len(getattr(self.brain, 'active_sessions', [])),
                     "system_metrics": system_metrics,
                     "update_available": getattr(self.brain, 'update_available', False),
-                    "stitch_usage_monthly": stitch_usage_monthly
+                    "stitch_usage_monthly": stitch_usage_monthly,
+                    "security_events": security_events
                 }
             except Exception as e:
                 import traceback
