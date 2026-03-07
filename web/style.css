@@ -139,6 +139,23 @@ nav {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Custom Scrollbar for Content Area */
+.content-area::-webkit-scrollbar {
+    width: 6px;
+}
+.content-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+.content-area::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+.content-area::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
 }
 
 .top-bar {
