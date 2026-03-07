@@ -64,6 +64,10 @@ class Reasoner:
             f"Tú eres el agente líder de la oficina de IA."
         ]
         
+        # Check for platform updates
+        if context.get('update_available'):
+            real_time_facts.append("¡IMPORTANTE! Hay una nueva versión de Nova26 disponible en GitHub. Informa al usuario 'Jefe' si es necesario.")
+        
         safe_context = {
             "current_input": context.get("current_input"),
             "recent_conversation": context.get("recent_conversation", [])[-5:],

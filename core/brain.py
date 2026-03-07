@@ -32,6 +32,7 @@ class NovaGravityBrain:
         self.active_sessions = set()
         self.current_mission = "Idle"
         self.last_action = "Iniciando..."
+        self.update_available = False
 
     async def boot(self, config_dir: str = 'config'):
         """Secuencia de arranque."""
@@ -74,6 +75,17 @@ class NovaGravityBrain:
         
         await self.db.log_evolution('boot', f"Booted identity: {identity_state['name']}")
         self.is_alive = True
+        
+        # Background update check
+        async def check_updates_loop():
+            from core.update_manager import UpdateManager
+            updater = UpdateManager()
+            while self.is_alive:
+                self.update_available = updater.check_for_updates()
+                await asyncio.sleep(3600) # Every hour manually for brain, or 600 for faster
+        
+        asyncio.create_task(check_updates_loop())
+        
         return identity_state
 
     async def process_input(self, raw_input: str, interface: str = 'telegram') -> str:
@@ -153,12 +165,10 @@ class NovaGravityBrain:
         recent_episodic = await self.memory.get_recent_episodic(limit=10)
         top_semantic = await self.memory.search_semantic()
         
-        return {
-            "name": self.identity.state.get('name', 'nova26'),
-            "current_input": perception["input_text"],
             "recent_conversation": recent_episodic,
             "semantic_knowledge": top_semantic,
-            "system_prompt": self.identity.state.get('system_prompt', '')
+            "system_prompt": self.identity.state.get('system_prompt', ''),
+            "update_available": self.update_available
         }
 
     async def _reason(self, context: dict) -> dict:
