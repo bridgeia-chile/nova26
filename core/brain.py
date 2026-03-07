@@ -322,7 +322,24 @@ class NovaGravityBrain:
                 try:
                     # In this architecture, we check if the MCP manager has it
                     # If not found, we use a mock for demonstration or a direct bridge
-                    res = await self.mcp_manager.execute_tool("StitchMCP", tool_name.replace("mcp_stitchmcp_", ""), tool_input)
+                    method_name = tool_name.replace("mcp_stitchmcp_", "")
+                    res = await self.mcp_manager.execute_tool("StitchMCP", method_name, tool_input)
+                    
+                    # Log usage for generation/edit operations
+                    if "error" not in res and method_name in ("generate_screen_from_text", "edit_screens"):
+                        try:
+                            import sqlite3
+                            conn = sqlite3.connect(self.soul_path)
+                            cursor = conn.cursor()
+                            cursor.execute(
+                                "INSERT INTO stitch_usage (agent_id, operation, project_id) VALUES (?, ?, ?)",
+                                ("agent-05", method_name, tool_input.get('projectId', 'unknown'))
+                            )
+                            conn.commit()
+                            conn.close()
+                        except Exception as log_err:
+                            logging.error(f"Error logging Stitch usage: {log_err}")
+                            
                     return {"response": str(res)}
                 except Exception as e:
                     return {"response": f"Error ejecutando Stitch: {e}"}

@@ -21,7 +21,7 @@
         <aside class="glass-nav">
             <div class="logo-area">
                 <div class="nova-logo"></div>
-                <h1>nova26</h1>
+                <h1>nova26 <span id="update-badge" class="badge hidden">Actualización Disponible</span></h1>
             </div>
             <nav>
                 <div class="nav-item active">🚀 Resumen</div>
@@ -50,6 +50,7 @@
             <div class="global-info-bar">
                 <div class="info-pill">🗄️ DB: <span id="db-size">0 KB</span></div>
                 <div class="info-pill">👥 Sesiones: <span id="active-sessions">0</span></div>
+                <div class="info-pill">🎨 Stitch: <span id="stitch-usage">0</span>/350</div>
                 <div class="info-pill">💻 CPU: <span id="sys-cpu">0%</span></div>
                 <div class="info-pill">🧠 RAM: <span id="sys-ram">0 MB</span></div>
                 <div class="info-pill">🎮 VRAM: <span id="sys-vram">0 GB</span></div>
@@ -105,6 +106,25 @@
         </div>
     </div>
 
+    <style>
+        .badge {
+            background: #ff4757;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        .hidden { display: none !important; }
+    </style>
     <script src="app.js"></script>
 </body>
 </html>

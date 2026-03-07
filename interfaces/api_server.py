@@ -105,11 +105,24 @@ class APIServer:
                     "vram_usage": gpu_vram
                 }
 
+                # Calculate Stitch Usage
+                stitch_usage_monthly = 0
+                try:
+                    conn = sqlite3.connect(self.brain.soul_path)
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT COUNT(*) FROM stitch_usage WHERE timestamp > date('now','start of month')")
+                    stitch_usage_monthly = cursor.fetchone()[0]
+                    conn.close()
+                except Exception as e:
+                    logging.error(f"Error calculating Stitch usage: {e}")
+
                 return {
                     "agents": sorted_agents,
                     "db_size": f"{db_size_kb:.1f} KB" if db_size_kb < 1024 else f"{(db_size_kb/1024):.1f} MB",
                     "sessions_count": len(getattr(self.brain, 'active_sessions', [])),
-                    "system_metrics": system_metrics
+                    "system_metrics": system_metrics,
+                    "update_available": getattr(self.brain, 'update_available', False),
+                    "stitch_usage_monthly": stitch_usage_monthly
                 }
             except Exception as e:
                 import traceback
@@ -197,6 +210,26 @@ class APIServer:
         
         # Run server as asyncio task without failing the whole app
         async def run_server():
+            # Background tasks (Node Sync)
+            async def background_loop():
+                import asyncio
+                while True:
+                    logging.info("Core maintenance: Heartbeat & Peer Sync...")
+                    # Peer Sync
+                    try:
+                        from core.node_sync import NodeSynchronizer
+                        soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
+                        sync = NodeSynchronizer(soul_path)
+                        peers = sync.get_known_peers()
+                        for peer in peers:
+                            await sync.pull_from_peer(peer)
+                    except Exception as e:
+                        logging.error(f"Background Sync Error: {e}")
+                    
+                    await asyncio.sleep(600) # Every 10 minutes
+            
+            asyncio.create_task(background_loop())
+            
             try:
                 await server.serve()
             except BaseException as e:

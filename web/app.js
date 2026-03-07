@@ -46,6 +46,7 @@ async function changeAgentModel(agentId, newModel) {
 const sysCpuEl = document.getElementById('sys-cpu');
 const sysRamEl = document.getElementById('sys-ram');
 const sysVramEl = document.getElementById('sys-vram');
+const stitchUsageEl = document.getElementById('stitch-usage');
 
 // Poll System Status
 async function updateStatus() {
@@ -59,11 +60,22 @@ async function updateStatus() {
         
         if (dbSizeEl) dbSizeEl.innerText = data.db_size || '0 KB';
         if (activeSessionsEl) activeSessionsEl.innerText = data.sessions_count || '0';
+        if (stitchUsageEl) stitchUsageEl.innerText = data.stitch_usage_monthly || '0';
         
         if (data.system_metrics) {
             if (sysCpuEl) sysCpuEl.innerText = data.system_metrics.cpu_usage || '0%';
             if (sysRamEl) sysRamEl.innerText = data.system_metrics.ram_usage || '0 MB';
             if (sysVramEl) sysVramEl.innerText = data.system_metrics.vram_usage || '0 GB';
+        }
+
+        // Update notification
+        const updateBadge = document.getElementById('update-badge');
+        if (updateBadge) {
+            if (data.update_available) {
+                updateBadge.classList.remove('hidden');
+            } else {
+                updateBadge.classList.add('hidden');
+            }
         }
     } catch (err) {
         console.error("Error polling status:", err);
