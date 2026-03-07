@@ -144,6 +144,10 @@ nav {
     min-height: 0;
 }
 
+.content-area > * {
+    flex-shrink: 0;
+}
+
 /* Custom Scrollbar for Content Area */
 .content-area::-webkit-scrollbar {
     width: 6px;
