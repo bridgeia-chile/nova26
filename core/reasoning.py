@@ -33,6 +33,7 @@ class Reasoner:
         - "skill_manager": Gestiona las habilidades de Nova.
         - "agent_manager": Actualiza el nombre y cargo de un sub-agente en el dashboard.
           Requiere "tool_input": {"method": "update_profile", "agent_id": "agent-02", "name": "...", "role": "..."}
+        - "sync_nodes": Sincroniza la base de datos de este agente con los nodos pares (como la Raspberry Pi). No requiere inputs adicionales. Requiere "tool_input": {}
         
         Si la tarea requiere múltiples pasos (ej. buscar en web, luego guardar un archivo, luego leerlo):
         1. Elige la herramienta adecuada para el paso actual.

@@ -160,6 +160,33 @@ class APIServer:
             except Exception as e:
                 return {"status": "error", "message": str(e)}
 
+        @self.app.get("/api/v1/sync/export")
+        async def sync_export(since_ts: str = '2000-01-01 00:00:00'):
+            try:
+                from core.node_sync import NodeSynchronizer
+                soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
+                sync = NodeSynchronizer(soul_path)
+                data = sync.export_data(since_ts)
+                return {"status": "success", "data": data}
+            except Exception as e:
+                import traceback
+                logging.error(f"Error en /sync/export: {traceback.format_exc()}")
+                return {"status": "error", "message": str(e)}
+
+        @self.app.post("/api/v1/sync/import")
+        async def sync_import(request: Request):
+            try:
+                payload = await request.json()
+                from core.node_sync import NodeSynchronizer
+                soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
+                sync = NodeSynchronizer(soul_path)
+                result = sync.import_data(payload.get('data', {}))
+                return result
+            except Exception as e:
+                import traceback
+                logging.error(f"Error en /sync/import: {traceback.format_exc()}")
+                return {"status": "error", "message": str(e)}
+                
     async def start(self):
         """Start the uvicorn server in the background and open browser."""
         import os

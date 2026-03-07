@@ -162,6 +162,14 @@ CREATE TABLE IF NOT EXISTS known_entities (
     UNIQUE(entity_type, name)
 );
 
+-- NODOS PEERS (Sincronización P2P)
+CREATE TABLE IF NOT EXISTS node_peers (
+    peer_url TEXT PRIMARY KEY,
+    node_name TEXT,
+    last_sync DATETIME DEFAULT '2000-01-01 00:00:00',
+    status TEXT DEFAULT 'active'
+);
+
 -- ÍNDICES PARA RENDIMIENTO
 CREATE INDEX IF NOT EXISTS idx_episodic_session ON episodic_memory(session_id);
 CREATE INDEX IF NOT EXISTS idx_episodic_timestamp ON episodic_memory(timestamp);

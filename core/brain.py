@@ -220,6 +220,32 @@ class NovaGravityBrain:
                         return {"response": f"Error actualizando perfil en BD: {e}"}
                 else:
                     return {"response": "Método de agent_manager no reconocido."}
+
+            elif tool_name == "sync_nodes":
+                try:
+                    from core.node_sync import NodeSynchronizer
+                    import asyncio
+                    sync = NodeSynchronizer(self.soul_path)
+                    peers = sync.get_known_peers()
+                    
+                    if not peers:
+                        return {"response": "No tienes configurada la IP de ningún nodo clon en variable PEER_NODES para sincronizar."}
+                    
+                    results = []
+                    for peer in peers:
+                        # Pull_from_peer is async, need to await it
+                        res = await sync.pull_from_peer(peer)
+                        if res.get('status') == 'success':
+                            s = res.get('stats', {})
+                            results.append(f"Clon ubicado en {peer}: Éxito (Importados: {s.get('episodic')} episodios, {s.get('semantic')} verdades)")
+                        else:
+                            results.append(f"Clon ubicado en {peer}: Falló ({res.get('message')})")
+                    
+                    return {"response": "\n".join(results)}
+                except Exception as e:
+                    import traceback
+                    print(traceback.format_exc())
+                    return {"response": f"Error fatal sincronizando: {e}"}
                 
             elif tool_name == "FileEditor" or tool_name == "file_editor":
                 from tools.file_editor import FileEditor
