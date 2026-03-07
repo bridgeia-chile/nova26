@@ -313,6 +313,19 @@ class NovaGravityBrain:
                 else:
                     res = {"error": "Método de Web Search no reconocido."}
                 return {"response": str(res)}
+            
+            elif tool_name.startswith("mcp_stitchmcp_"):
+                # Bridge to internal Stitch tools
+                # Since we are running in an environment with StitchMCP, 
+                # we can use the registry to call it if it's connected, 
+                # or provide a specific bridge.
+                try:
+                    # In this architecture, we check if the MCP manager has it
+                    # If not found, we use a mock for demonstration or a direct bridge
+                    res = await self.mcp_manager.execute_tool("StitchMCP", tool_name.replace("mcp_stitchmcp_", ""), tool_input)
+                    return {"response": str(res)}
+                except Exception as e:
+                    return {"response": f"Error ejecutando Stitch: {e}"}
                 
             return {"response": f"Herramienta {tool_name} no disponible aún."}
             

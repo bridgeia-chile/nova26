@@ -34,7 +34,14 @@ class Reasoner:
         - "agent_manager": Actualiza el nombre y cargo de un sub-agente en el dashboard.
           Requiere "tool_input": {"method": "update_profile", "agent_id": "agent-02", "name": "...", "role": "..."}
         - "sync_nodes": Sincroniza la base de datos de este agente con los nodos pares (como la Raspberry Pi). No requiere inputs adicionales. Requiere "tool_input": {}
+        - "mcp_StitchMCP_create_project": Crea un nuevo proyecto en Google Stitch.
+          Requiere "tool_input": {"title": "Nombre del Proyecto"}
+        - "mcp_StitchMCP_generate_screen_from_text": Generates a UI screen from a prompt.
+          Requiere "tool_input": {"projectId": "ID", "prompt": "Descripción visual", "deviceType": "MOBILE|DESKTOP"}
+        - "mcp_StitchMCP_list_projects": Lista proyectos de diseño.
         
+        Si la tarea requiere diseño UI/UX (crear pantallas, prototipos, flujos de usuario), DEBES usar las herramientas "mcp_StitchMCP_*" o delegar a Nova Design si es una tarea extensa de refinamiento.
+
         Si la tarea requiere múltiples pasos (ej. buscar en web, luego guardar un archivo, luego leerlo):
         1. Elige la herramienta adecuada para el paso actual.
         2. Establece "is_mission_complete": false.
