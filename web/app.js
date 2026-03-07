@@ -110,71 +110,117 @@ closeModalBtn.addEventListener('click', () => {
 });
 
 function renderAgents(agents) {
-    agentsGrid.innerHTML = '';
+    const existingCards = document.querySelectorAll('.agent-card');
     
-    agents.forEach(agent => {
-        const card = document.createElement('div');
-        card.className = 'glass-card agent-card';
-        card.style.cursor = 'pointer';
+    // Si la cantidad de agentes cambió o es la primera carga, renderizamos todo
+    if (existingCards.length !== agents.length || existingCards.length === 0) {
+        agentsGrid.innerHTML = '';
         
-        card.addEventListener('click', (e) => {
-            // No abrir modal si hicieron click en el selector de modelo
-            if(e.target.tagName.toLowerCase() === 'select' || e.target.tagName.toLowerCase() === 'option') return;
-            openAgentModal(agent);
-        });
-        
-        const statusClass = `status-${agent.status}`;
-        
-        let dynamicSelect = `<select class="model-select glass-select" data-agent-id="${agent.id}">`;
-        if(!availableModels.includes(agent.model)) {
-            dynamicSelect += `<option value="${agent.model}" selected>${agent.model}</option>`;
-        }
-        availableModels.forEach(m => {
-            dynamicSelect += `<option value="${m}" ${m === agent.model ? 'selected' : ''}>${m}</option>`;
-        });
-        dynamicSelect += `</select>`;
-
-        card.innerHTML = `
-            <div class="card-header">
-                <span class="agent-name">${agent.name}</span>
-                <span class="status-badge ${statusClass}">${agent.status}</span>
-            </div>
+        agents.forEach(agent => {
+            const card = document.createElement('div');
+            card.id = `agent-card-${agent.id}`;
+            card.className = 'glass-card agent-card';
+            card.style.cursor = 'pointer';
             
-            <div class="agent-metrics">
-                <div class="metric-item">
-                    <span class="metric-label">RAM / VRAM</span>
-                    <span class="metric-value">${agent.ram} / ${agent.vram}</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Temp CPU/GPU</span>
-                    <span class="metric-value">${agent.cpu_temp} / ${agent.gpu_temp}</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Tokens Mensuales</span>
-                    <span class="metric-value">${agent.tokens || 0}</span>
-                </div>
-                <div class="metric-item">
-                    <span class="metric-label">Modelo Activo</span>
-                    ${dynamicSelect}
-                </div>
-            </div>
+            card.addEventListener('click', (e) => {
+                if(e.target.tagName.toLowerCase() === 'select' || e.target.tagName.toLowerCase() === 'option') return;
+                openAgentModal(agent);
+            });
             
-            <div class="agent-task-area" style="margin-top: 5px;">
-                <span class="task-label">${agent.task}</span>
-                <div class="task-content">CPU: ${agent.cpu} | ${agent.detail}</div>
-                <div class="cpu-bar"><div class="cpu-fill" style="width: ${agent.cpu}"></div></div>
-            </div>
-        `;
-        agentsGrid.appendChild(card);
-    });
+            const statusClass = `status-${agent.status}`;
+            
+            let dynamicSelect = `<select class="model-select glass-select" id="model-${agent.id}" data-agent-id="${agent.id}">`;
+            if(!availableModels.includes(agent.model)) {
+                dynamicSelect += `<option value="${agent.model}" selected>${agent.model}</option>`;
+            }
+            availableModels.forEach(m => {
+                dynamicSelect += `<option value="${m}" ${m === agent.model ? 'selected' : ''}>${m}</option>`;
+            });
+            dynamicSelect += `</select>`;
 
-    document.querySelectorAll('.model-select').forEach(select => {
-        select.addEventListener('change', (e) => {
-            const agentId = e.target.getAttribute('data-agent-id');
-            const newModel = e.target.value;
-            changeAgentModel(agentId, newModel);
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="agent-name" id="name-${agent.id}">${agent.name}</span>
+                    <span class="status-badge ${statusClass}" id="status-${agent.id}">${agent.status}</span>
+                </div>
+                
+                <div class="agent-metrics">
+                    <div class="metric-item">
+                        <span class="metric-label">RAM / VRAM</span>
+                        <span class="metric-value" id="ramvram-${agent.id}">${agent.ram} / ${agent.vram}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Temp CPU/GPU</span>
+                        <span class="metric-value" id="temp-${agent.id}">${agent.cpu_temp} / ${agent.gpu_temp}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Tokens Mensuales</span>
+                        <span class="metric-value" id="tokens-${agent.id}">${agent.tokens || 0}</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Modelo Activo</span>
+                        ${dynamicSelect}
+                    </div>
+                </div>
+                
+                <div class="agent-task-area" style="margin-top: 5px;">
+                    <span class="task-label" id="task-${agent.id}">${agent.task}</span>
+                    <div class="task-content">CPU: <span id="cpu-${agent.id}">${agent.cpu}</span> | <span id="detail-${agent.id}">${agent.detail}</span></div>
+                    <div class="cpu-bar"><div class="cpu-fill" id="cpubar-${agent.id}" style="width: ${agent.cpu}"></div></div>
+                </div>
+            `;
+            agentsGrid.appendChild(card);
         });
-    });
+
+        document.querySelectorAll('.model-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const agentId = e.target.getAttribute('data-agent-id');
+                const newModel = e.target.value;
+                changeAgentModel(agentId, newModel);
+            });
+        });
+    } else {
+        // En lugar de recrear, actualizamos los valores de las tarjetas existentes en tiempo real.
+        agents.forEach(agent => {
+            const nameEl = document.getElementById(`name-${agent.id}`);
+            if (nameEl && nameEl.innerText !== agent.name) nameEl.innerText = agent.name;
+            
+            const statusEl = document.getElementById(`status-${agent.id}`);
+            if (statusEl) {
+                statusEl.innerText = agent.status;
+                statusEl.className = `status-badge status-${agent.status}`;
+            }
+            
+            const ramvramEl = document.getElementById(`ramvram-${agent.id}`);
+            if (ramvramEl) ramvramEl.innerText = `${agent.ram} / ${agent.vram}`;
+            
+            const tempEl = document.getElementById(`temp-${agent.id}`);
+            if (tempEl) tempEl.innerText = `${agent.cpu_temp} / ${agent.gpu_temp}`;
+            
+            const tokensEl = document.getElementById(`tokens-${agent.id}`);
+            if (tokensEl) tokensEl.innerText = agent.tokens || 0;
+            
+            const taskEl = document.getElementById(`task-${agent.id}`);
+            if (taskEl && taskEl.innerText !== agent.task) taskEl.innerText = agent.task;
+            
+            const cpuEl = document.getElementById(`cpu-${agent.id}`);
+            if (cpuEl) cpuEl.innerText = agent.cpu;
+            
+            const detailEl = document.getElementById(`detail-${agent.id}`);
+            if (detailEl && detailEl.innerText !== agent.detail) detailEl.innerText = agent.detail;
+            
+            const cpubarEl = document.getElementById(`cpubar-${agent.id}`);
+            if (cpubarEl) cpubarEl.style.width = agent.cpu;
+            
+            const modelEl = document.getElementById(`model-${agent.id}`);
+            if (modelEl && document.activeElement !== modelEl) {
+                // Solo actualizar si el usuario no tiene abierto el seleccionador desplegable
+                if (modelEl.value !== agent.model && availableModels.includes(agent.model)) {
+                    modelEl.value = agent.model;
+                }
+            }
+        });
+    }
 }
 
 // Send Main Chat Message

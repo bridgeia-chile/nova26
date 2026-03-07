@@ -11,7 +11,24 @@ from datetime import datetime
 class NodeSynchronizer:
     def __init__(self, db_path):
         self.db_path = db_path
+        self._ensure_tables()
         
+    def _ensure_tables(self):
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS node_peers (
+                    peer_url TEXT PRIMARY KEY,
+                    last_sync TIMESTAMP,
+                    status TEXT
+                )
+            ''')
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            logging.error(f"Error ensuring node_peers table: {e}")
+
     def _execute_query(self, query, params=(), fetch_all=True):
         try:
             conn = sqlite3.connect(self.db_path)
@@ -142,8 +159,12 @@ class NodeSynchronizer:
         env_peers = [p.strip() for p in env_peers_str.split(',') if p.strip()]
         
         db_peers = self._execute_query("SELECT peer_url FROM node_peers")
-        db_peer_urls = [p['peer_url'] for p in db_peers]
+        db_peer_urls = [p['peer_url'] for p in db_peers] if db_peers else []
         
         # Combine
         all_peers = set(env_peers + db_peer_urls)
-        return list(all_peers)
+        
+        # Filter unconfigured nodes (e.g., "[IP_DE_LA_RASPBERRY]")
+        valid_peers = [p for p in all_peers if "[" not in p and "]" not in p]
+        
+        return valid_peers
