@@ -50,6 +50,7 @@ if [ ! -f ".env" ]; then
     echo "TELEGRAM_BOT_TOKEN=" >> .env
     echo "OWNER_TELEGRAM_ID=" >> .env
     echo "SOUL_DB_PATH=./nova26.db" >> .env
+    echo "PEER_NODES=http://[IP_DE_TU_PC]:8090" >> .env
     echo "¡Atención! Se ha creado un archivo '.env' vacío. Deberás rellenarlo."
 fi
 
