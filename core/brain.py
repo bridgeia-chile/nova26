@@ -164,7 +164,9 @@ class NovaGravityBrain:
         """Busca memorias relevantes."""
         recent_episodic = await self.memory.get_recent_episodic(limit=10)
         top_semantic = await self.memory.search_semantic()
-        
+        return {
+            "name": self.identity.state.get('name', 'nova26'),
+            "current_input": perception["input_text"],
             "recent_conversation": recent_episodic,
             "semantic_knowledge": top_semantic,
             "system_prompt": self.identity.state.get('system_prompt', ''),
