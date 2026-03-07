@@ -41,6 +41,10 @@ class Reasoner:
         - "mcp_StitchMCP_list_projects": Lista proyectos de diseño.
         - "security_tools": Herramientas de ciberseguridad.
           Requiere "tool_input": {"method": "scan|harden|isolate", "path": "path/para/aislar"}
+        - "mcp_notebooklm_list_notebooks": Lista tus cuadernos de NotebookLM.
+        - "mcp_notebooklm_add_notebook": Crea un nuevo cuaderno. Requiere "name".
+        - "mcp_notebooklm_add_source": Añade conocimiento al proyecto. Requiere "notebook_id", "source_name" y "content".
+        - "mcp_notebooklm_ask_question": Consulta a la base de conocimientos del proyecto.
         
         Si detectas una amenaza de seguridad (modificación de archivos, intentos de login), utiliza "security_tools" o delega la investigación a Nova Sentry.
         Si la tarea requiere diseño UI/UX (crear pantallas, prototipos, flujos de usuario), DEBES usar las herramientas "mcp_StitchMCP_*" o delegar a Nova Design si es una tarea extensa de refinamiento.
