@@ -1,0 +1,98 @@
+16:22:46 --- Wrapper Started ---
+16:24:12 --- Wrapper Started ---
+16:24:12 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:24:12 Env copied
+16:24:12 Env base keys set
+16:24:12 Anthropic bridge vars set
+16:24:12 PATH updated
+16:24:12 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:24:12 Model name: devstral-2:123b-cloud
+16:24:12 Command constructed: C:\Users\Rosvel Nuñez\.local\bin\claude.exe mcp serve --model devstral-2:123b-cloud
+16:24:13 DEBUG [stderr]: error: unknown option '--model'
+16:24:13 --- Wrapper Terminating ---
+16:24:28 --- Wrapper Started ---
+16:24:28 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:24:28 Env copied
+16:24:28 Env base keys set
+16:24:28 Anthropic bridge vars set
+16:24:28 PATH updated
+16:24:28 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:24:28 Model name: devstral-2:123b-cloud
+16:24:28 Command constructed: ollama launch claude --model devstral-2:123b-cloud -- mcp serve
+16:24:28 DEBUG [stderr]: 
+16:24:28 DEBUG [stderr]: [1mModel Configuration[0m
+16:24:28 DEBUG [stderr]: 
+16:24:28 DEBUG [stderr]: 
+16:24:28 DEBUG [stderr]: Launching Claude Code with devstral-2:123b-cloud...
+16:24:56 --- Wrapper Started ---
+16:24:56 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:24:56 Env copied
+16:24:56 Env base keys set
+16:24:56 Anthropic bridge vars set
+16:24:56 PATH updated
+16:24:56 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:24:56 Model name: devstral-2:123b-cloud
+16:24:56 Command constructed: ollama launch claude --model devstral-2:123b-cloud -- mcp serve
+16:24:56 DEBUG [stderr]: 
+16:24:56 DEBUG [stderr]: Launching Claude Code with devstral-2:123b-cloud...
+16:25:07 --- Wrapper Started ---
+16:25:07 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:25:07 Env copied
+16:25:07 Env base keys set
+16:25:07 Anthropic bridge vars set
+16:25:07 PATH updated
+16:25:07 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:25:07 Model name: devstral-2:123b-cloud
+16:25:07 Command constructed: ollama launch claude --model devstral-2:123b-cloud -- mcp serve --debug
+16:25:08 DEBUG [stderr]: 
+16:25:08 DEBUG [stderr]: Launching Claude Code with devstral-2:123b-cloud...
+16:26:31 --- Wrapper Started ---
+16:26:31 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:26:31 Env copied
+16:26:31 Env base keys set
+16:26:31 Anthropic bridge vars set
+16:26:31 PATH updated
+16:26:31 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:26:31 Model name: devstral-2:123b-cloud
+16:26:31 Command constructed: ollama launch claude --model devstral-2:123b-cloud -- mcp serve --debug
+16:26:31 DEBUG [stderr]: 
+16:26:31 DEBUG [stderr]: [1mModel Configuration[0m
+16:26:31 DEBUG [stderr]: 
+16:26:31 DEBUG [stderr]: 
+16:26:31 DEBUG [stderr]: Launching Claude Code with devstral-2:123b-cloud...
+16:27:31 --- Wrapper Started ---
+16:27:31 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:27:31 Env copied
+16:27:31 Env base keys set
+16:27:31 Anthropic bridge vars set
+16:27:31 PATH updated
+16:27:31 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:27:31 Model name: devstral-2:123b-cloud
+16:27:31 Command constructed: C:\Users\Rosvel Nuñez\.local\bin\claude.exe mcp serve
+16:27:53 --- Wrapper Started ---
+16:27:53 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:27:53 Env copied
+16:27:53 Env base keys set
+16:27:53 Anthropic bridge vars set
+16:27:53 PATH updated
+16:27:53 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:27:53 Model name: devstral-2:123b-cloud
+16:27:53 Command constructed: C:\Users\Rosvel Nuñez\.local\bin\claude.exe mcp serve
+16:31:47 --- Wrapper Started ---
+16:31:47 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:31:47 Env copied
+16:31:47 Env base keys set
+16:31:47 Anthropic bridge vars set
+16:31:47 PATH updated
+16:31:47 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:31:47 Model name: devstral-2:123b-cloud
+16:31:47 Command constructed: C:\Users\Rosvel Nuñez\.local\bin\claude.exe mcp serve
+16:33:14 --- Wrapper Started ---
+16:33:14 Args: ['--model', 'devstral-2:123b-cloud', '--', 'mcp', 'serve']
+16:33:14 Env copied
+16:33:14 Env base keys set
+16:33:14 Anthropic bridge vars set
+16:33:14 PATH updated with C:\Users\Rosvel Nuñez\.local\bin
+16:33:14 Claude EXE path: C:\Users\Rosvel Nuñez\.local\bin\claude.exe
+16:33:14 Model name: devstral-2:123b-cloud
+16:33:14 Command constructed: C:\Users\Rosvel Nuñez\.local\bin\claude.exe mcp serve

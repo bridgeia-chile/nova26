@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nova26 | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="dashboard-container">
+        <!-- Sidebar / Navigation -->
+        <aside class="glass-nav">
+            <div class="logo-area">
+                <div class="nova-logo"></div>
+                <h1>nova26</h1>
+            </div>
+            <nav>
+                <div class="nav-item active">🚀 Resumen</div>
+                <div class="nav-item">🧠 Memoria</div>
+                <div class="nav-item">🛠 Herramientas</div>
+                <div class="nav-item">⚙️ Ajustes</div>
+            </nav>
+            <div class="system-status">
+                <div class="status-indicator online"></div>
+                <span>Agente Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <section class="content-area">
+            <header class="top-bar">
+                <div class="search-glass">
+                    <input type="text" placeholder="Buscar en la memoria...">
+                </div>
+                <div class="user-profile">
+                    <span>Admin</span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            <div class="global-info-bar">
+                <div class="info-pill">🗄️ DB: <span id="db-size">0 KB</span></div>
+                <div class="info-pill">👥 Sesiones: <span id="active-sessions">0</span></div>
+                <div class="info-pill">💻 CPU: <span id="sys-cpu">0%</span></div>
+                <div class="info-pill">🧠 RAM: <span id="sys-ram">0 MB</span></div>
+                <div class="info-pill">🎮 VRAM: <span id="sys-vram">0 GB</span></div>
+            </div>
+
+            <div id="agents-grid" class="agents-grid">
+                <!-- Agent cards will be injected here by app.js -->
+                <div class="glass-card agent-card">
+                    <div class="card-header">
+                        <span class="agent-name">Cargando agentes...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-split">
+                <div class="glass-card chat-container">
+                    <div class="chat-header">Interacción Directa</div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="msg bot">Hola. Soy Nova. ¿En qué puedo ayudarte hoy?</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Escribe un comando o pregunta...">
+                        <button id="send-btn">Enviar</button>
+                    </div>
+                </div>
+                
+                <div class="glass-card activity-log">
+                    <div class="chat-header">Log de Actividad</div>
+                    <ul id="activity-list">
+                        <li>[SYSTEM] Boot sequence complete.</li>
+                        <li>[TELEGRAM] Voice message received.</li>
+                        <li>[CORE] Tool ScriptExecutor activated.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Agent Chat Modal -->
+    <div id="agent-chat-modal" class="modal-overlay hidden">
+        <div class="glass-card modal-content">
+            <div class="modal-header">
+                <h2 id="modal-agent-name">Agente</h2>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </div>
+            <div class="chat-messages" id="modal-chat-messages">
+                <div class="msg bot">Conexión directa establecida. ¿Qué necesitas?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="modal-chat-input" placeholder="Comando para este agente...">
+                <button id="modal-send-btn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

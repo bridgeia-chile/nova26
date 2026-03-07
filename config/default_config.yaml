@@ -1,0 +1,60 @@
+llm:
+  default_provider: groq
+  provider_chain:
+    - groq
+    - deepseek
+    - gemini
+    - openai
+    - openrouter
+    - ollama
+  providers:
+    groq:
+      api_key_env: GROQ_API_KEY
+      base_url: https://api.groq.com/openai/v1
+      models:
+        fast: llama-3.1-8b-instant
+        capable: llama-3.3-70b-versatile
+        reasoning: llama-3.3-70b-versatile
+        whisper: whisper-large-v3-turbo
+
+    openai:
+      api_key_env: OPENAI_API_KEY
+      base_url: https://api.openai.com/v1
+      models:
+        fast: gpt-4o-mini
+        capable: gpt-4o-mini
+        reasoning: o3-mini
+
+    deepseek:
+      api_key_env: DEEPSEEK_API_KEY
+      base_url: https://api.deepseek.com
+      models:
+        fast: deepseek-chat
+        capable: deepseek-chat
+        reasoning: deepseek-reasoner
+
+    gemini:
+      api_key_env: GEMINI_API_KEY
+      base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+      models:
+        fast: gemini-2.0-flash
+        capable: gemini-2.0-flash
+        reasoning: gemini-2.0-pro-exp-02-05
+
+    openrouter:
+      api_key_env: OPENROUTER_API_KEY
+      base_url: https://openrouter.ai/api/v1
+      models:
+        fast: google/gemini-2.0-flash-lite-preview-02-05:free
+        capable: deepseek/deepseek-chat:free
+        reasoning: deepseek/deepseek-r1:free
+      rate_limit:
+        requests_per_minute: 20
+
+    ollama:
+      base_url: http://localhost:11434
+      models:
+        default: llama3.2:3b
+        code: qwen2.5-coder:7b
+        embed: nomic-embed-text
+      auto_pull: true

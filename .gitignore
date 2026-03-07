@@ -1,0 +1,29 @@
+# Environments
+.env
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Secrets & Credentials
+client_secret*.json
+*.pem
+
+# Dependencies
+node_modules/
+.npm/
+
+# IDE
+.vscode/
+.idea/
+
+# Temp tools
+.temp_openclaw/
+gogcli_extracted/
+*.zip

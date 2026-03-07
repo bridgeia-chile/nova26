@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  nova-gravity:
+    build: .
+    container_name: nova-gravity
+    restart: unless-stopped
+    volumes:
+      - ./nova_soul.db:/app/nova_soul.db  # Alma persistente
+      - ./config:/app/config
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"  # API REST local
+    environment:
+      - SOUL_DB_PATH=/app/nova_soul.db
+    deploy:
+      resources:
+        limits:
+          memory: 512M  # Eficiente como PicoClaw
+          cpus: '1.0'
