@@ -13,7 +13,14 @@ Usage:
 import argparse
 import asyncio
 import os
+import sys
 from pathlib import Path
+
+# Fix paths for global PyPI wrapper execution
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 from dotenv import load_dotenv
 
 from core.brain import NovaGravityBrain
@@ -22,8 +29,10 @@ from interfaces.cli import CLIInterface
 from interfaces.api_server import APIServer
 
 # Load environment logic
-load_dotenv()
-DEFAULT_SOUL_PATH = os.getenv('SOUL_DB_PATH', str(Path(__file__).parent / "nova26.db"))
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
+
+DEFAULT_SOUL_PATH = os.getenv('SOUL_DB_PATH', os.path.join(BASE_DIR, "nova26.db"))
 
 async def first_time_setup():
     print("🌌 nova26 - Primera Configuración")
@@ -41,7 +50,7 @@ async def restore_from_soul(soul_path: str):
 async def main():
     parser = argparse.ArgumentParser(description="nova26 - Agente Autónomo de IA")
     parser.add_argument('command', nargs='?', default='run',
-                        choices=['run', 'restore', 'backup', 'cli', 'setup', 'status'])
+                        choices=['run', 'restore', 'backup', 'cli', 'setup', 'status', 'configure'])
     parser.add_argument('--soul', type=str, default=DEFAULT_SOUL_PATH,
                         help='Ruta al archivo de alma (nova26.db)')
     parser.add_argument('--interface', type=str, default='all',
@@ -52,6 +61,33 @@ async def main():
 
     if args.command == 'setup':
         await first_time_setup()
+    elif args.command == 'configure':
+        print("\n🔧 Configuración de Autenticación OAuth")
+        print("1. OpenAI Codex (OAuth)")
+        print("2. Google Gemini (OAuth)")
+        choice = input("\nElige una opción (1-2): ")
+
+        brain = NovaGravityBrain(soul_db_path=args.soul)
+        await brain.boot()
+        from core.oauth_manager import OAuthManager
+        oauth_manager = OAuthManager(brain.db)
+
+        if choice == '1':
+            success = await oauth_manager.login_openai()
+            provider = "OpenAI"
+        elif choice == '2':
+            success = await oauth_manager.login_google()
+            provider = "Google Gemini"
+        else:
+            print("Opción no válida.")
+            return
+
+        if success:
+            print(f"\n✅ API de {provider} configurada correctamente.")
+        else:
+            print(f"\n❌ Error al configurar {provider}.")
+        # Salimos limpio tras configurar
+        return
     elif args.command == 'restore':
         await restore_from_soul(args.soul)
     elif args.command == 'backup':
@@ -80,8 +116,16 @@ async def main():
             while True:
                 await asyncio.sleep(3600)
 
-if __name__ == '__main__':
+def run_cli():
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
         print("\nApagando...")
+
+def run_cli_configure():
+    import sys
+    sys.argv = [sys.argv[0], 'configure']
+    run_cli()
+
+if __name__ == '__main__':
+    run_cli()

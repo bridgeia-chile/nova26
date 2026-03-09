@@ -15,6 +15,22 @@ class MCPClientManager:
 
     async def connect_tool(self, tool_name: str, command: str, args: list, env: dict):
         """Establish stdio connection to an MCP server."""
+        import os
+        import shutil
+        
+        # Windows fix for npx/npm/node
+        if os.name == 'nt':
+            if command in ['npx', 'npm', 'node']:
+                actual_cmd = shutil.which(command)
+                if not actual_cmd and command in ['npx', 'npm']:
+                    actual_cmd = shutil.which(f"{command}.cmd")
+                
+                if actual_cmd:
+                    logging.info(f"Resolved {command} to {actual_cmd}")
+                    command = actual_cmd
+                else:
+                    logging.warning(f"Could not resolve {command} in PATH for tool {tool_name}")
+
         logging.info(f"Attempting to connect to MCP tool: {tool_name} with command: {command} {' '.join(args)}")
         try:
             server_params = StdioServerParameters(command=command, args=args, env=env)

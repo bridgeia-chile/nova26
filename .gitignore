@@ -25,5 +25,41 @@ node_modules/
 
 # Temp tools
 .temp_openclaw/
+.temp_ha/
 gogcli_extracted/
 *.zip
+*.tgz
+
+# Logs and Traces
+*.log
+*.txt
+!README.md
+!requirements.txt
+
+# OS and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+build/
+dist/
+*.egg-info/
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Secrets
+client_secret*.json
+*.pem

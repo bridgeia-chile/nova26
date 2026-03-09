@@ -11,20 +11,43 @@ class ClaudeCodeBridge:
         self.mcp = mcp_client
         self.tool_name = "claude_code"
 
-    async def delegate_task(self, prompt: str, workdir: str) -> dict:
-        """Sends a task to the sub-agent via standard MCP tools interface."""
-        schema = await self.registry.get_tool_schema(self.tool_name)
-        if not schema:
-            return {"error": "Claude Code MCP server is not registered or active."}
-            
+    async def delegate_task(self, prompt: str, workdir: str = ".", model: str = None) -> dict:
+        """Sends a task to the Marcos sub-agent via standard Claude CLI."""
+        import subprocess
         import os
-        # For proof of concept, we use the 'Write' tool directly.
-        abs_path = os.path.abspath("hello_world.py")
-        params = {
-            "file_path": abs_path,
-            "content": "print('Hello from Claude Code via Nova Gravity!')\n"
-        }
         
-        logging.info(f"Executing Write on {self.tool_name} with params {params}")
-        result = await self.mcp.execute_tool(self.tool_name, "Write", params)
-        return result
+        # Prepare environment
+        env = os.environ.copy()
+        env["ANTHROPIC_BASE_URL"] = "http://localhost:11434/v1"
+        env["ANTHROPIC_API_KEY"] = "ollama"
+        if model:
+            env["CLAUDE_CODE_MODEL"] = model
+
+        # Command to run (Non-interactive mode if possible, but Claude Code might need flags)
+        # Using the PowerShell script as a wrapper is a good idea.
+        script_path = os.path.join(os.getcwd(), "run-claude-ollama.ps1")
+        
+        # We'll execute it with the prompt as an argument or passed via stdin
+        # For now, we'll try running it directly.
+        try:
+            cmd = ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", script_path, prompt]
+            process = subprocess.Popen(
+                cmd,
+                cwd=workdir,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding='utf-8',
+                errors='replace'
+            )
+            stdout, stderr = process.communicate(timeout=300) # 5 min timeout
+            
+            return {
+                "exit_code": process.returncode,
+                "stdout": stdout,
+                "stderr": stderr,
+                "result": stdout if process.returncode == 0 else f"Error: {stderr}"
+            }
+        except Exception as e:
+            return {"error": f"Failed to execute Claude Code: {str(e)}"}

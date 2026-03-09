@@ -46,8 +46,8 @@ llm:
       base_url: https://openrouter.ai/api/v1
       models:
         fast: google/gemini-2.0-flash-lite-preview-02-05:free
-        capable: deepseek/deepseek-chat:free
-        reasoning: deepseek/deepseek-r1:free
+        capable: meta-llama/llama-3.3-70b-instruct:free
+        reasoning: meta-llama/llama-3.3-70b-instruct:free
       rate_limit:
         requests_per_minute: 20
 

@@ -7,7 +7,7 @@ import yaml
 from pathlib import Path
 from datetime import datetime
 
-class IdentityManager:
+class Identity:
     """Handles the unique instance of the identity."""
     
     def __init__(self, soul_db):
@@ -92,7 +92,10 @@ class IdentityManager:
         combined_skills = []
         for md_file in skills_path.glob("*.md"):
             try:
+                # Truncate content to avoid token bloat
                 content = md_file.read_text(encoding='utf-8')
+                if len(content) > 500:
+                    content = content[:500] + "\n... [Contenido truncado para ahorrar tokens. Lee el archivo si necesitas más detalle]"
                 combined_skills.append(f"### SKILL: {md_file.stem.upper()}\n{content}")
             except Exception:
                 continue

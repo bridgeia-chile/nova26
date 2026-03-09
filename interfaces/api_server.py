@@ -3,7 +3,7 @@ API Server
 A minimalistic local FastAPI server to allow external tools to send webhooks or interact.
 """
 import logging
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import asyncio
@@ -131,8 +131,7 @@ class APIServer:
                     "system_metrics": system_metrics,
                     "update_available": getattr(self.brain, 'update_available', False),
                     "stitch_usage_monthly": stitch_usage_monthly,
-                    "security_events": security_events,
-                    "sync_enabled": getattr(self.brain, 'sync_enabled', False)
+                    "security_events": security_events
                 }
             except Exception as e:
                 import traceback
@@ -153,13 +152,46 @@ class APIServer:
         @self.app.get("/api/v1/models")
         async def get_models():
             try:
-                available_models = [
-                    "Llama-3.3-70b", "Llama-3.2-1b", "Llama-3.2-3b",
-                    "gpt-4o", "gpt-4o-mini", "claude-3-5-sonnet",
-                    "gemini-pro", "gemini-1.5-flash", "deepseek-coder",
-                    "mixtral-8x7b", "gemma-7b", "claude_code"
-                ]
-                return {"status": "success", "models": available_models}
+                # Retorna solo modelos habilitados
+                async with self.brain.db.conn.execute("SELECT id FROM models_config WHERE is_enabled = 1") as cursor:
+                    models = [row[0] for row in await cursor.fetchall()]
+                
+                # Si la tabla está vacía (no debería), usamos fallback
+                if not models:
+                    models = ["Llama-3.3-70b", "gpt-4o", "gemini-pro"]
+                    
+                return {"status": "success", "models": models}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+
+        @self.app.get("/api/v1/settings/models")
+        async def get_all_models_config():
+            try:
+                async with self.brain.db.conn.execute("SELECT * FROM models_config") as cursor:
+                    rows = await cursor.fetchall()
+                    models = [dict(r) for r in rows]
+                return {"status": "success", "models": models}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+
+        @self.app.post("/api/v1/settings/models/{model_id}")
+        async def update_model_config(model_id: str, request: Request):
+            try:
+                data = await request.json()
+                temp = data.get("temperature")
+                enabled = data.get("is_enabled")
+                
+                if temp is not None:
+                    await self.brain.db.conn.execute(
+                        "UPDATE models_config SET temperature = ? WHERE id = ?", (temp, model_id)
+                    )
+                if enabled is not None:
+                    await self.brain.db.conn.execute(
+                        "UPDATE models_config SET is_enabled = ? WHERE id = ?", (1 if enabled else 0, model_id)
+                    )
+                
+                await self.brain.db.conn.commit()
+                return {"status": "success", "message": f"Configuración de {model_id} actualizada."}
             except Exception as e:
                 return {"status": "error", "message": str(e)}
 
@@ -183,42 +215,83 @@ class APIServer:
             except Exception as e:
                 return {"status": "error", "message": str(e)}
 
-        @self.app.get("/api/v1/sync/export")
-        async def sync_export(since_ts: str = '2000-01-01 00:00:00'):
+        @self.app.websocket("/ws/tunnel")
+        async def websocket_tunnel(websocket: WebSocket):
+            client_ip = websocket.client.host
+            await self.brain.tunnel.handle_incoming_connection(websocket, client_ip)
+
+        @self.app.post("/api/v1/tunnel/authorize")
+        async def tunnel_authorize(request: Request):
             try:
-                from core.node_sync import NodeSynchronizer
-                soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
-                sync = NodeSynchronizer(soul_path)
-                data = sync.export_data(since_ts)
-                return {"status": "success", "data": data}
+                data = await request.json()
+                ip_address = data.get("ip_address")
+                action = data.get("action")
+                if action == "authorize":
+                    self.brain.tunnel.authorize_peer(ip_address)
+                elif action == "reject":
+                    self.brain.tunnel.reject_peer(ip_address)
+                return {"status": "success"}
             except Exception as e:
-                import traceback
-                logging.error(f"Error en /sync/export: {traceback.format_exc()}")
                 return {"status": "error", "message": str(e)}
 
-        @self.app.post("/api/v1/sync/import")
-        async def sync_import(request: Request):
+        @self.app.post("/api/v1/tunnel/host")
+        async def tunnel_host(request: Request):
             try:
-                payload = await request.json()
-                from core.node_sync import NodeSynchronizer
-                soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
-                sync = NodeSynchronizer(soul_path)
-                result = sync.import_data(payload.get('data', {}))
-                return result
+                data = await request.json()
+                host_ws_url = data.get("host_url")
+                self.brain.tunnel.set_target_host(host_ws_url)
+                return {"status": "success"}
             except Exception as e:
-                import traceback
-                logging.error(f"Error en /sync/import: {traceback.format_exc()}")
                 return {"status": "error", "message": str(e)}
 
-        @self.app.post("/api/v1/sync/toggle")
-        async def api_sync_toggle(request: Request):
+        @self.app.get("/api/v1/tunnel/status")
+        async def tunnel_status():
             try:
-                payload = await request.json()
-                enabled = payload.get('enabled', False)
-                self.brain.sync_enabled = enabled
-                status_str = "activada" if enabled else "desactivada"
-                logging.info(f"Sincronización P2P {status_str} por el usuario.")
-                return {"status": "success", "sync_enabled": enabled}
+                return {"status": "success", "data": self.brain.tunnel.get_status()}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+
+        @self.app.get("/api/v1/config/ha")
+        async def config_ha_get():
+            try:
+                import os
+                url = os.getenv("HA_URL", "")
+                token = "**********" if os.getenv("HA_TOKEN") else ""
+                return {"status": "success", "ha_url": url, "ha_token_set": bool(token)}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+
+        @self.app.post("/api/v1/config/ha")
+        async def config_ha_post(request: Request):
+            try:
+                data = await request.json()
+                ha_url = data.get("ha_url", "")
+                ha_token = data.get("ha_token", "")
+                
+                import os
+                from pathlib import Path
+                # Save to .env logic simply for persistence
+                env_path = Path(".env")
+                env_dict = {}
+                if env_path.exists():
+                    with open(env_path, "r") as f:
+                        for line in f:
+                            if '=' in line and not line.strip().startswith('#'):
+                                k, v = line.strip().split('=', 1)
+                                env_dict[k] = v
+                
+                if ha_url:
+                    env_dict["HA_URL"] = ha_url
+                    os.environ["HA_URL"] = ha_url
+                if ha_token and ha_token != "**********":
+                    env_dict["HA_TOKEN"] = ha_token
+                    os.environ["HA_TOKEN"] = ha_token
+                
+                with open(env_path, "w") as f:
+                    for k, v in env_dict.items():
+                        f.write(f"{k}={v}\n")
+                        
+                return {"status": "success"}
             except Exception as e:
                 return {"status": "error", "message": str(e)}
                 
@@ -232,26 +305,6 @@ class APIServer:
         
         # Run server as asyncio task without failing the whole app
         async def run_server():
-            # Background tasks (Node Sync)
-            async def background_loop():
-                import asyncio
-                while True:
-                    if getattr(self.brain, 'sync_enabled', False):
-                        logging.info("Core maintenance: Heartbeat & Peer Sync...")
-                        # Peer Sync
-                        try:
-                            from core.node_sync import NodeSynchronizer
-                            soul_path = getattr(self.brain, 'soul_path', 'nova_soul.db')
-                            sync = NodeSynchronizer(soul_path)
-                            peers = sync.get_known_peers()
-                            for peer in peers:
-                                await sync.pull_from_peer(peer)
-                        except Exception as e:
-                            logging.error(f"Background Sync Error: {e}")
-                    
-                    await asyncio.sleep(600) # Every 10 minutes
-            
-            asyncio.create_task(background_loop())
             
             try:
                 await server.serve()

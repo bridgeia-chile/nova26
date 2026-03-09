@@ -162,12 +162,24 @@ CREATE TABLE IF NOT EXISTS known_entities (
     UNIQUE(entity_type, name)
 );
 
--- NODOS PEERS (Sincronización P2P)
-CREATE TABLE IF NOT EXISTS node_peers (
-    peer_url TEXT PRIMARY KEY,
-    node_name TEXT,
-    last_sync DATETIME DEFAULT '2000-01-01 00:00:00',
-    status TEXT DEFAULT 'active'
+-- CONFIGURACIÓN DE MODELOS
+CREATE TABLE IF NOT EXISTS models_config (
+    id TEXT PRIMARY KEY, -- ej. 'openai:gpt-4o'
+    provider TEXT NOT NULL,
+    model_name TEXT NOT NULL,
+    category TEXT DEFAULT 'Direct API', -- 'Direct API', 'Free Operator', 'Ollama (Local)', 'Ollama (Cloud)'
+    temperature REAL DEFAULT 0.7,
+    is_enabled INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TUNEL PEERS (Conexión P2P Nova26)
+CREATE TABLE IF NOT EXISTS tunnel_peers (
+    ip_address TEXT PRIMARY KEY,
+    name TEXT,
+    role TEXT CHECK(role IN ('host', 'client')),
+    auth_status TEXT CHECK(auth_status IN ('pending', 'authorized', 'rejected')),
+    last_seen DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ÍNDICES PARA RENDIMIENTO

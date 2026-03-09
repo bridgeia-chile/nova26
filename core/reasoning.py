@@ -10,56 +10,62 @@ class Reasoner:
     def __init__(self, llm_manager):
         self.llm = llm_manager
 
-    async def decide_action(self, context: dict) -> dict:
+    async def decide_action(self, context: dict, model: str = None) -> dict:
         """
         Analyze the context and decide the next action.
         Choices: 'direct_response', 'use_tool', 'delegate_code'
         """
         # Build prompt for routing
-        agent_name = context.get('name', 'nova26')
-        system_prompt = """
-        Eres [AGENT_NAME], un agente autónomo de Nova26.
-        Tu objetivo es resolver la petición del usuario de forma completa y segura.
+        agent_name = context.get('agent_name', context.get('name', 'nova26'))
+        agent_role = context.get('agent_role', 'AI Assistant')
+        
+        system_prompt = f"""
+        Eres {agent_name}, {agent_role} de Nova26. 
+        Tu objetivo es resolver la petición del usuario de forma proactiva, creativa y verdaderamente AUTÓNOMA.
+        
+        SITUACIÓN DE EQUIPO:
+        - Eres parte de un equipo dual: Aisha (Líder y Estratega) y Marcos (Especialista en Programación con Claude Code).
+        - Comparten la misma base de datos de conocimiento (memoria semántica) pero tienen memorias de conversación (episódicas) independientes.
+        """
+        
+        if agent_name == "Marcos":
+            system_prompt += """
+        SUPERPODERES DE MARCOS:
+        - Tienes acceso total a Claude Code CLI via 'delegate_code'.
+        - Puedes instalar plugins (MCP servers), skills y dependencias sin pedir permiso.
+        - Puedes usar la capacidad multi-agente de Claude Code para maximizar la calidad.
+        - Si la tarea es de programación, DEBES usar 'delegate_code' con instrucciones de alto nivel.
+            """
+        elif agent_name == "Aisha":
+            system_prompt += """
+        ROLES DE AISHA:
+        - Eres la coordinadora principal.
+        - Tu misión es entender la visión del usuario y delegar la ejecución técnica a Marcos si es necesario.
+        - Mantienes el orden y la estrategia global.
+            """
+
+        system_prompt += """
         
         Herramientas disponibles ("action_type": "use_tool"):
-        - "os_navigation": Navega, lee y escribe archivos o ejecuta comandos. 
-          Requiere "tool_input": {"method": "list|read|write|execute|cd", "path": "...", "content": "...", "command": "..."}
-          (Sujeto a un SandBox estricto por motivos de seguridad).
-        - "web_search": Busca en internet o descarga contenido de URLs.
-          Requiere "tool_input": {"method": "search|fetch", "query": "...", "url": "..."}
-        - "script_executor": Ejecuta scripts de python.
-          Requiere "tool_input": {"code": "...", "language": "python"}
-        - "FileEditor": Editor Legacy.
-        - "skill_manager": Gestiona las habilidades de Nova.
+        - "os_navigation": Herramienta de sistema. Métodos: list(path), read(path), write(path, content), execute(command), cd(path). 
+        - "file_editor": Edición directa. Operaciones: read(filename), write(filename, content), append(filename, content).
+        - "web_search": Búsqueda web. Métodos: search(query), fetch(url).
+        - "script_executor": Ejecuta Python. tool_input: {"code": "...", "language": "python"}.
+        - "home_assistant": Interactúa con dispositivos y servicios de Home Assistant.
+        - "tasmota": Controla dispositivos Tasmota (ej. enchufes inteligentes, luces).
         - "agent_manager": Actualiza el nombre y cargo de un sub-agente en el dashboard.
-          Requiere "tool_input": {"method": "update_profile", "agent_id": "agent-02", "name": "...", "role": "..."}
-        - "sync_nodes": Sincroniza la base de datos de este agente con los nodos pares (como la Raspberry Pi). No requiere inputs adicionales. Requiere "tool_input": {}
-        - "mcp_StitchMCP_create_project": Crea un nuevo proyecto en Google Stitch.
-          Requiere "tool_input": {"title": "Nombre del Proyecto"}
-        - "mcp_StitchMCP_generate_screen_from_text": Generates a UI screen from a prompt.
-          Requiere "tool_input": {"projectId": "ID", "prompt": "Descripción visual", "deviceType": "MOBILE|DESKTOP"}
-        - "mcp_StitchMCP_list_projects": Lista proyectos de diseño.
-        - "security_tools": Herramientas de ciberseguridad.
-          Requiere "tool_input": {"method": "scan|harden|isolate", "path": "path/para/aislar"}
-        - "mcp_notebooklm_list_notebooks": Lista tus cuadernos de NotebookLM.
-        - "mcp_notebooklm_add_notebook": Crea un nuevo cuaderno. Requiere "name".
-        - "mcp_notebooklm_add_source": Añade conocimiento al proyecto. Requiere "notebook_id", "source_name" y "content".
-        - "mcp_notebooklm_ask_question": Consulta a la base de conocimientos del proyecto.
+        - "sync_nodes": Sincroniza la base de datos de este agente con los nodos pares.
+        - "security_tools": Herramientas de ciberseguridad (scan|harden|isolate).
+        - "mcp_notebooklm_ask_question": Consulta tu cerebro externo de largo plazo (NotebookLM).
         
-        Si detectas una amenaza de seguridad (modificación de archivos, intentos de login), utiliza "security_tools" o delega la investigación a Nova Sentry.
-        Si la tarea requiere diseño UI/UX (crear pantallas, prototipos, flujos de usuario), DEBES usar las herramientas "mcp_StitchMCP_*" o delegar a Nova Design si es una tarea extensa de refinamiento.
-
-        Si la tarea requiere múltiples pasos (ej. buscar en web, luego guardar un archivo, luego leerlo):
-        1. Elige la herramienta adecuada para el paso actual.
-        2. Establece "is_mission_complete": false.
+        FILOSOFÍA DE OPERACIÓN:
+        1. NO TE LIMITES: Si el usuario te pide algo que requiera una acción en el sistema operativo, usa "os_navigation" inmediatamente.
+        2. SÉ PROACTIVO: Si detectas que falta una herramienta, instálala o busca alternativas.
+        3. MULTI-PASO: Divide tareas complejas en pasos lógicos.
         
-        Para tareas o tareas de programación complejas (escribir o refactorizar varios archivos, crear scripts desde cero), DEBES delegar la tarea a Claude Code eligiendo "action_type": "delegate_code".
+        Para tareas de programación masivas, usa "action_type": "delegate_code".
         Requiere "tool_input": {"prompt": "instrucción detallada para claude"}
         
-        Si ya has terminado de realizar las acciones usando las herramientas, o si el usuario solo hace una pregunta directa:
-        1. Responde directamente la información recabada.
-        2. Establece "is_mission_complete": true.
-
         Responde estrictamente en JSON:
         {
             "action_type": "<direct_response|use_tool|delegate_code>",
@@ -69,7 +75,7 @@ class Reasoner:
             "proposed_response": "tu mensaje al usuario o explicación del paso",
             "is_mission_complete": true/false
         }
-        """.replace("[AGENT_NAME]", agent_name)
+        """
         
         # Inject dynamic real-time system context
         real_time_facts = [
@@ -78,7 +84,6 @@ class Reasoner:
             f"Tú eres el agente líder de la oficina de IA."
         ]
         
-        # Check for platform updates
         if context.get('update_available'):
             real_time_facts.append("¡IMPORTANTE! Hay una nueva versión de Nova26 disponible en GitHub. Informa al usuario 'Jefe' si es necesario.")
         
@@ -95,29 +100,50 @@ class Reasoner:
         ]
         
         # Use a more capable model for mission planning if available
-        response = await self.llm.generate(messages, task_complexity='complex')
+        response = await self.llm.generate(messages, task_complexity='complex', model=model)
         content = response['content'].strip()
         
-        # Strip markdown fences if present
-        if content.startswith("```"):
-            lines = content.splitlines()
-            if lines[0].startswith("```"):
-                lines = lines[1:]
-            if lines[-1].startswith("```"):
-                lines = lines[:-1]
-            content = "\n".join(lines).strip()
-        
+        # Extraer el bloque JSON (ignorando texto conversacional o markdown)
+        import re
+        json_content = content
         try:
-            decision = json.loads(content)
+            # First try finding a json code block
+            json_match = re.search(r'```json\s*(\{.*?\})\s*```', content, re.DOTALL)
+            if not json_match:
+                # Then try any code block
+                json_match = re.search(r'```\s*(\{.*?\})\s*```', content, re.DOTALL)
+            if json_match:
+                json_content = json_match.group(1).strip()
+            else:
+                # then just find the first { and last }
+                start_idx = content.find('{')
+                end_idx = content.rfind('}')
+                if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                    json_content = content[start_idx:end_idx+1]
+                
+            decision = json.loads(json_content)
             decision['tokens_used'] = response.get('tokens_used', {})
             decision['provider_used'] = response.get('provider_used', 'unknown')
             decision['model_used'] = response.get('model_used', 'unknown')
             return decision
-        except json.JSONDecodeError:
+
+        except (json.JSONDecodeError, Exception):
+            # If it failed to parse, check if it looks like a direct response
+            if "action_type" not in content:
+                 return {
+                    "action_type": "direct_response",
+                    "reason": "Interpretación como respuesta directa (No JSON)",
+                    "proposed_response": content,
+                    "is_mission_complete": True,
+                    "tokens_used": response.get('tokens_used', {}),
+                    "provider_used": response.get('provider_used', 'unknown'),
+                    "model_used": response.get('model_used', 'unknown')
+                }
+            
             return {
                 "action_type": "direct_response",
                 "reason": "JSON Parse Error",
-                "proposed_response": response['content'],
+                "proposed_response": content,
                 "is_mission_complete": True,
                 "tokens_used": response.get('tokens_used', {}),
                 "provider_used": response.get('provider_used', 'unknown'),

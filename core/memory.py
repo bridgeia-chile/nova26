@@ -16,22 +16,23 @@ class MemoryManager:
 
     async def add_episodic(self, session_id: str, role: str, content: str, 
                            interface: str = 'telegram', importance: float = 0.5, 
-                           metadata: dict = None):
+                           metadata: dict = None, agent_id: str = 'agent-01'):
         """Append a new log to episodic memory."""
         meta_json = json.dumps(metadata) if metadata else None
         await self.db.conn.execute(
             """
-            INSERT INTO episodic_memory (session_id, role, content, interface, importance_score, metadata_json)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO episodic_memory (session_id, role, content, interface, importance_score, metadata_json, agent_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
-            (session_id, role, content, interface, importance, meta_json)
+            (session_id, role, content, interface, importance, meta_json, agent_id)
         )
         await self.db.conn.commit()
 
-    async def get_recent_episodic(self, limit: int = 50) -> list:
-        """Fetch recent conversational context."""
+    async def get_recent_episodic(self, limit: int = 50, agent_id: str = 'agent-01') -> list:
+        """Fetch recent conversational context for a specific agent."""
         async with self.db.conn.execute(
-            "SELECT * FROM v_recent_memories LIMIT ?", (limit,)
+            "SELECT * FROM episodic_memory WHERE agent_id = ? ORDER BY timestamp DESC LIMIT ?", 
+            (agent_id, limit)
         ) as cursor:
             rows = await cursor.fetchall()
             return [dict(row) for row in reversed(rows)] # Chronological order

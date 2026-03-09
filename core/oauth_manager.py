@@ -13,9 +13,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import urllib.request
 
-# OpenClaw Public Client ID for OpenAI
-OPENAI_CLIENT_ID = "openclaw-preflight"
-OPENAI_AUTH_URL = "https://auth.openai.com/authorize"
+# OpenClaw Public Client ID for OpenAI (Codex / ChatGPT Plus)
+OPENAI_CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann"
+OPENAI_AUTH_URL = "https://auth.openai.com/oauth/authorize"
 OPENAI_TOKEN_URL = "https://auth.openai.com/oauth/token"
 
 # Google (gcloud default) Public Client ID for Gemini
@@ -23,7 +23,7 @@ GOOGLE_CLIENT_ID = "32555940559.apps.googleusercontent.com" # Default gcloud cli
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 
-REDIRECT_URI = "http://localhost:1455/callback"
+REDIRECT_URI = "http://localhost:1455/auth/callback"
 
 class OAuthCallbackHandler(BaseHTTPRequestHandler):
     """Local server to catch the redirect callback."""
@@ -32,7 +32,7 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed_path = urllib.parse.urlparse(self.path)
-        if parsed_path.path == '/callback':
+        if parsed_path.path == '/auth/callback':
             query_components = urllib.parse.parse_qs(parsed_path.query)
             if 'code' in query_components:
                 self.server.auth_code = query_components['code'][0]
@@ -76,7 +76,9 @@ class OAuthManager:
             'state': state,
             'code_challenge': challenge,
             'code_challenge_method': 'S256',
-            'audience': 'https://api.openai.com/v1'
+            'id_token_add_organizations': 'true',
+            'codex_cli_simplified_flow': 'true',
+            'originator': 'pi'
         }
         
         url = f"{OPENAI_AUTH_URL}?{urllib.parse.urlencode(params)}"
@@ -117,16 +119,16 @@ class OAuthManager:
                 if access_token:
                     # Guardar en DB
                     await self.db.conn.execute(
-                        "INSERT OR REPLACE INTO identities (key, value) VALUES (?, ?)", 
+                        "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", 
                         ('openai_access_token', access_token)
                     )
                     if refresh_token:
                          await self.db.conn.execute(
-                            "INSERT OR REPLACE INTO identities (key, value) VALUES (?, ?)", 
+                            "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", 
                             ('openai_refresh_token', refresh_token)
                         )
                     await self.db.conn.commit()
-                    print("\n[+] Login EXITOSO. Tokens guardados en la BD de memoria (identities).")
+                    print("\n[+] Login EXITOSO. Tokens guardados en la BD de memoria (config).")
                     return True
                 else:
                     print("\n[-] Error: Respuesta del proveedor no incluye access_token.")
@@ -198,16 +200,16 @@ class OAuthManager:
                 if access_token:
                     # Guardar en DB
                     await self.db.conn.execute(
-                        "INSERT OR REPLACE INTO identities (key, value) VALUES (?, ?)", 
+                        "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", 
                         ('google_access_token', access_token)
                     )
                     if refresh_token:
                          await self.db.conn.execute(
-                            "INSERT OR REPLACE INTO identities (key, value) VALUES (?, ?)", 
+                            "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", 
                             ('google_refresh_token', refresh_token)
                         )
                     await self.db.conn.commit()
-                    print("\n[+] Login EXITOSO. Tokens guardados en la BD de memoria (identities).")
+                    print("\n[+] Login EXITOSO. Tokens guardados en la BD de memoria (config).")
                     return True
                 else:
                     print("\n[-] Error: Respuesta de Google no incluye access_token.")
@@ -223,7 +225,7 @@ class OAuthManager:
 
     async def get_openai_token(self):
         """Retrieve the token from the DB."""
-        async with self.db.conn.execute("SELECT value FROM identities WHERE key = 'openai_access_token'") as cursor:
+        async with self.db.conn.execute("SELECT value FROM config WHERE key = 'openai_access_token'") as cursor:
             row = await cursor.fetchone()
             if row:
                 return row['value']
@@ -231,7 +233,7 @@ class OAuthManager:
 
     async def get_google_token(self):
         """Retrieve the Google token from the DB."""
-        async with self.db.conn.execute("SELECT value FROM identities WHERE key = 'google_access_token'") as cursor:
+        async with self.db.conn.execute("SELECT value FROM config WHERE key = 'google_access_token'") as cursor:
             row = await cursor.fetchone()
             if row:
                 return row['value']

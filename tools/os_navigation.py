@@ -116,3 +116,19 @@ class OSNavigation:
             return {"success": True, "cwd": self.current_working_dir}
         else:
             return {"error": "El directorio no existe."}
+
+    def network_ping_scan(self, subnet: str = "192.168.1") -> dict:
+        """
+        Performs a rapid ping scan on a /24 subnet using native PowerShell.
+        Useful when nmap is not installed.
+        """
+        # Security check: subnet must look like X.Y.Z
+        parts = subnet.split('.')
+        if len(parts) != 3 or not all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
+            return {"error": "Subnet invalida. Usa formato '192.168.1'."}
+
+        # Rapid ping via PowerShell (Batch ping)
+        ps_cmd = f"1..254 | ForEach-Object {{ Test-Connection -ComputerName '{subnet}.$_' -Count 1 -Delay 0 -Quiet -ErrorAction SilentlyContinue | If ($_ ) {{ Write-Host '{subnet}.$_ is UP' }} }}"
+        full_cmd = f'powershell -Command "{ps_cmd}"'
+        
+        return self.execute_command(full_cmd)

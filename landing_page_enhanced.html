@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrena tu ChatGPT - De usuario a experto en 4 horas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Paleta de colores optimizada - Tema Futurista con toques profesionales */
+            --primary-50: #f5f3ff;
+            --primary-100: #ede9fe;
+            --primary-200: #ddd6fe;
+            --primary-300: #c4b5fd;
+            --primary-400: #a78bfa;
+            --primary-500: #8b5cf6;  /* Principal - Morado futurista */
+            --primary-600: #7c3aed;
+            --primary-700: #6d28d9;
+            --primary-800: #5b21b6;
+            --primary-900: #4c1d95;
+
+            --secondary-50: #f0f9ff;
+            --secondary-100: #e0f2fe;
+            --secondary-200: #bae6fd;
+            --secondary-300: #7dd3fc;
+            --secondary-400: #38bdf8;  /* Secundario - Azul cielo */
+            --secondary-500: #0ea5e9;
+            --secondary-600: #0284c7;
+            --secondary-700: #0369a1;
+            --secondary-800: #075985;
+            --secondary-900: #0c4a6e;
+
+            --accent-50: #fef2f2;
+            --accent-100: #fee2e2;
+            --accent-200: #fecaca;
+            --accent-300: #fca5a5;
+            --accent-400: #f87171;  /* Acento - Rosa vibrante */
+            --accent-500: #ef4444;
+            --accent-600: #dc2626;
+            --accent-700: #b91c1c;
+            --accent-800: #991b1b;
+            --accent-900: #7f1d1d;
+
+            --success-500: #10b981;
+            --warning-500: #f59e0b;
+            --danger-500: #ef4444;
+            --info-500: #3b82f6;
+
+            --dark-50: #f9fafb;
+            --dark-100: #f3f4f6;
+            --dark-200: #e5e7eb;
+            --dark-300: #d1d5db;
+            --dark-400: #9ca3af;
+            --dark-500: #6b7280;  /* Gris principal */
+            --dark-600: #4b5563;
+            --dark-700: #374151;
+            --dark-800: #1f2937;  /* Texto oscuro */
+            --dark-900: #111827;
+
+            --light-50: #f9fafb;
+            --light-100: #f3f4f6;
+            --light-200: #e5e7eb;
+            --light-300: #d1d5db;
+            --light-400: #9ca3af;
+            --light-500: #6b7280;
+
+            /* Efectos Glassmorphism avanzados */
+            --glass-bg-1: rgba(255, 255, 255, 0.08);
+            --glass-bg-2: rgba(255, 255, 255, 0.12);
+            --glass-bg-3: rgba(255, 255, 255, 0.18);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            --glass-glow: 0 0 20px rgba(139, 92, 246, 0.2);
+
+            /* Tipografía mejorada */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Inter', sans-serif;
+            --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+            /* Transiciones y animaciones */
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Bordes y radios */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 50px;
+
+            /* Espaciado */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--dark-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sistema de diseño - Componentes reutilizables */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        /* Barra de navegación con efecto glass avanzado */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--glass-bg-2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: var(--space-sm) var(--space-lg);
+            transition: var(--transition-normal);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+            text-decoration: none;
+            transition: var(--transition-normal);
+        }
+
+        .logo:hover {
+            color: var(--primary-700);
+            transform: scale(1.02);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-500), var(--accent-400));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--dark-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--space-xs) 0;
+            position: relative;
+            transition: var(--transition-fast);
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-400);
+        }
+
+        .nav-link.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-500);
+            font-weight: 600;
+        }
+
+        .btn-nav {
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .btn-nav-primary {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            box-shadow: var(--glass-glow);
+        }
+
+        .btn-nav-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-nav-secondary {
+            background: var(--glass-bg-1);
+            color: var(--primary-600);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-nav-secondary:hover {
+            background: var(--glass-bg-2);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section con efectos avanzados */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-2xl) var(--space-md);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(226, 232, 240, 0.6) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(239, 68, 68, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2xl);
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .hero-text {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(135deg, var(--primary-600), var(--accent-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-lg);
+            color: var(--dark-600);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-highlight {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(239, 68, 68, 0.1));
+            padding: 0.1em 0.4em;
+            border-radius: var(--radius-sm);
+            margin: 0 0.2em;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-full);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            transition: var(--transition-normal);
+            border: none;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition-normal);
+            z-index: -1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-600);
+            border: 2px solid var(--primary-200);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+            transform: translateY(-3px);
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* Glass Card avanzado con efectos 3D */
+        .glass-card {
+            background: var(--glass-bg-2);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: var(--space-lg);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            transform: perspective(1000px) rotateY(-8deg) rotateX(5deg);
+            transition: var(--transition-slow);
+            position: relative;
+            overflow: hidden;
+            animation: floatIn 1.2s ease-out;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-400), var(--accent-400));
+            transform: scaleX(0.8);
+            transition: var(--transition-normal);
+        }
+
+        .glass-card:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .glass-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .glass-card img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            transition: var(--transition-normal);
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        }
+
+        .glass-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .glass-card h3 {
+            color: var(--primary-600);
+            margin-bottom: var(--space-sm);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .glass-card p {
+            color: var(--dark-500);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Elementos flotantes decorativos con animaciones profesionales */
+        .floating-element {
+            position: absolute;
+            border-radius: var(--radius-full);
+            background: var(--glass-bg-1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            animation: float 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .floating-element::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 60%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            border-radius: inherit;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .floating-element:hover::after {
+            opacity: 1;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(255, 255, 255, 0.1));
+        }
+
+        .floating-element:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 25%;
+            right: 15%;
+            animation-delay: 2s;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(255, 255, 255, 0.1));
+        }
+
+        .floating-element:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(255, 255, 255, 0.1));
+        }
+
+        .floating-element:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            bottom: 30%;
+            right: 20%;
+            animation-delay: 6s;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(255, 255, 255, 0.1));
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: perspective(1000px) rotateY(15deg) rotateX(10deg) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: perspective(1000px) rotateY(-8deg) rotateX(5deg);
+            }
+        }
+
+        /* Sección de características */
+        .features-section {
+            padding: var(--space-2xl) var(--space-md);
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(to right, rgba(139, 92, 246, 0.05) 0%, transparent 30%),
+                linear-gradient(to left, rgba(59, 130, 246, 0.03) 70%, transparent 100%);
+            z-index: -1;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-subtitle {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: var(--primary-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-sm);
+            background: var(--glass-bg-1);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-full);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark-900);
+            margin-bottom: var(--space-sm);
+            line-height: 1.2;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: var(--dark-500);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .feature-card {
+            background: var(--glass-bg-1);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            transition: var(--transition-normal);
+            animation: fadeInUp 0.8s ease-out;
+            opacity: 0;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.2s; }
+        .feature-card:nth-child(2) { animation-delay: 0.4s; }
+        .feature-card:nth-child(3) { animation-delay: 0.6s; }
+        .feature-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .feature-card.visible {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-200);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: var(--space-md);
+            transition: var(--transition-normal);
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+            color: var(--primary-700);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, var(--secondary-100), var(--secondary-200));
+            color: var(--secondary-700);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, var(--accent-100), var(--accent-200));
+            color: var(--accent-700);
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            background: linear-gradient(135deg, var(--success-50), rgba(16, 185, 129, 0.2));
+            color: var(--success-500);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-900);
+            margin-bottom: var(--space-sm);
+        }
+
+        .feature-card p {
+            color: var(--dark-500);
+            line-height: 1.6;
+        }
+
+        /* Sección de precios */
+        .pricing-section {
+            padding: var(--space-2xl) var(--space-md);
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+            border: 2px solid var(--primary-200);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--dark-900);
+            margin-bottom: var(--space-xs);
+        }
+
+        .pricing-card.featured .pricing-price {
+            color: var(--primary-700);
+        }
+
+        .pricing-period {
+            color: var(--dark-400);
+            font-size: 1rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: var(--space-lg) 0;
+        }
+
+        .pricing-features li {
+            padding: var(--space-xs) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--dark-600);
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            width: 20px;
+            height: 20px;
+            background: var(--success-500);
+            color: white;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Footer moderno */
+        .footer {
+            background: var(--dark-900);
+            color: var(--light-400);
+            padding: var(--space-2xl) var(--space-md) var(--space-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-400), var(--accent-400));
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .footer-brand {
+            grid-column: span 2;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, var(--primary-400), var(--accent-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-brand p {
+            color: var(--light-400);
+            line-height: 1.6;
+        }
+
+        .footer-links h4 {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--space-xs);
+        }
+
+        .footer-links a {
+            color: var(--light-400);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-400);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--dark-700);
+            color: var(--light-500);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design mejorado */
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+
+            .glass-card {
+                transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+                margin: 0 auto;
+            }
+
+            .nav-links {
+                display: none; /* Para implementar menú móvil */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        /* Animación de scroll para elementos */
+        @keyframes scrollIndicator {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(10px);
+                opacity: 1;
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--primary-400);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scrollIndicator 2s ease-in-out infinite;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .scroll-indicator::before {
+            content: '↓';
+            color: var(--primary-400);
+            font-size: 1rem;
+            animation: scrollIndicator 2s ease-in-out infinite reverse;
+        }
+
+        /* Efecto de carga inicial */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-900);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top-color: var(--primary-400);
+            border-radius: var(--radius-full);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Barra de navegación con efecto glass -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">N</div>
+                <span>NovaGravity</span>
+            </a>
+            <div class="nav-links">
+                <a href="#caracteristicas" class="nav-link">Características</a>
+                <a href="#precios" class="nav-link">Precios</a>
+                <a href="#testimonios" class="nav-link">Testimonios</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+            </div>
+            <a href="#precios" class="btn btn-nav btn-nav-primary">
+                <i class="fas fa-rocket"></i>
+                Empezar ahora
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <!-- Floating decorative elements -->
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Domina ChatGPT como un <span class="hero-highlight">Profesional</span></h1>
+                <p>Transforma tu productividad con nuestro método probado. Deja de perder tiempo y empieza a obtener resultados expertos desde el primer día.</p>
+                <div class="btn-group">
+                    <a href="#precios" class="btn btn-primary">
+                        <i class="fas fa-star"></i>
+                        Plan Premium
+                    </a>
+                    <a href="#caracteristicas" class="btn btn-secondary">
+                        <i class="fas fa-info-circle"></i>
+                        Más información
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="glass-card">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80" alt="ChatGPT Professional Training">
+                    <h3>Método PODER</h3>
+                    <p>Framework estructurado para obtener respuestas de nivel experto desde el primer día.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator" onclick="scrollToSection('caracteristicas')"></div>
+    </section>
+
+    <!-- Sección de características -->
+    <section class="features-section" id="caracteristicas">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">Todo lo que necesitas</div>
+                <h2 class="section-title">Características Principales</h2>
+                <p class="section-description">Nuestro programa está diseñado para llevarte de principiante a experto en tiempo récord.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card visible">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Inteligencia Aumentada</h3>
+                    <p>Aprovecha al máximo las capacidades cognitivas de ChatGPT para resolver problemas complejos.</p>
+                </div>
+
+                <div class="feature-card visible">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Automatización Inteligente</h3>
+                    <p>Automatiza tareas repetitivas y enfócate en lo que realmente importa para tu negocio.</p>
+                </div>
+
+                <div class="feature-card visible">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Crecimiento Exponencial</h3>
+                    <p>Escala tus operaciones sin aumentar tu carga de trabajo gracias a la IA.</p>
+                </div>
+
+                <div class="feature-card visible">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovación Continua</h3>
+                    <p>Mantente a la vanguardia con las últimas técnicas y estrategias de prompt engineering.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de precios -->
+    <section class="pricing-section" id="precios">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">Elige tu plan</div>
+                <h2 class="section-title">Precios Flexibles</h2>
+                <p class="section-description">Selecciona el plan que mejor se adapte a tus necesidades y presupuesto.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Básico</h3>
+                    <div class="pricing-price">$99</div>
+                    <div class="pricing-period">/ mes</div>
+                    <p>Ideal para principiantes que quieren empezar con buen pie.</p>
+                    <ul class="pricing-features">
+                        <li>Acceso a módulos básicos</li>
+                        <li>Soporte por email</li>
+                        <li>Actualizaciones mensuales</li>
+                        <li>Comunidad de aprendizaje</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary w-100">
+                        <i class="fas fa-shopping-cart"></i>
+                        Comprar ahora
+                    </a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Más Popular</div>
+                    <h3>Premium</h3>
+                    <div class="pricing-price">$199</div>
+                    <div class="pricing-period">/ mes</div>
+                    <p>Para profesionales que buscan resultados excepcionales.</p>
+                    <ul class="pricing-features">
+                        <li>Todos los módulos avanzados</li>
+                        <li>Soporte prioritario 24/7</li>
+                        <li>Actualizaciones semanales</li>
+                        <li>Sesiones de coaching mensuales</li>
+                        <li>Acceso a plantillas exclusivas</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary w-100">
+                        <i class="fas fa-crown"></i>
+                        Empezar Premium
+                    </a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Empresarial</h3>
+                    <div class="pricing-price">$499</div>
+                    <div class="pricing-period">/ mes</div>
+                    <p>Solución completa para equipos y organizaciones.</p>
+                    <ul class="pricing-features">
+                        <li>Acceso ilimitado para equipos</li>
+                        <li>Soporte dedicado</li>
+                        <li>Integraciones personalizadas</li>
+                        <li>Entrenamiento in-company</li>
+                        <li>API y automatizaciones avanzadas</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary w-100">
+                        <i class="fas fa-building"></i>
+                        Contactar ventas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>NovaGravity</h3>
+                    <p>Transformando la forma en que trabajas con inteligencia artificial. Potenciando tu productividad con las últimas técnicas de IA.</p>
+                    <div class="social-links" style="margin-top: var(--space-md);">
+                        <a href="#" style="color: var(--light-400); margin-right: var(--space-sm); font-size: 1.2rem; transition: var(--transition-fast);">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" style="color: var(--light-400); margin-right: var(--space-sm); font-size: 1.2rem; transition: var(--transition-fast);">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" style="color: var(--light-400); margin-right: var(--space-sm); font-size: 1.2rem; transition: var(--transition-fast);">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" style="color: var(--light-400); font-size: 1.2rem; transition: var(--transition-fast);">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Productos</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Curso Básico</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Plan Premium</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Soluciones Empresariales</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Plantillas</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Recursos</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Documentación</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Webinars</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Comunidad</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Términos de Servicio</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Política de Privacidad</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Cookies</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Garantía</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 NovaGravity. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                window.scrollTo({
+                    top: section.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Feature cards animation on scroll
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        featureCards.forEach(card => {
+            observer.observe(card);
+        });
+
+        // Floating elements interactive animation
+        window.addEventListener('mousemove', (e) => {
+            const floatingElements = document.querySelectorAll('.floating-element');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            floatingElements.forEach((element, index) => {
+                const speed = 0.05 + (index * 0.02);
+                const x = (mouseX - 0.5) * 50 * speed;
+                const y = (mouseY - 0.5) * 50 * speed;
+                element.style.transform = `translate(${x}px, ${y}px) ${element.style.transform.replace(/translate\([^)]*\)/, '')}`;
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const floatingElements = document.querySelectorAll('.floating-element');
+
+            floatingElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = element.style.transform.replace(
+                    /translateY\([^)]*\)/,
+                    `translateY(${scrolled * speed}px)`
+                );
+            });
+        });
+
+        // Add tooltips to buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'translateY(-3px)';
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

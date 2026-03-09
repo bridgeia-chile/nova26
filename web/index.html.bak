@@ -22,7 +22,7 @@
     <link rel="preload" href="style.css" as="style">
     <link rel="preload" href="app.js" as="script">
     <link rel="stylesheet" href="style.min.css">
-    <link rel="stylesheet" href="responsive.css">
+<link rel="preload" href="animations.js" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -236,17 +236,6 @@
         }
         .hidden { display: none !important; }
     </style>
-    <script>
-        // Load animations with absolute redundancy check
-        function loadAnimations() {
-            if (typeof initNovaAnimations === 'function') return;
-            var script = document.createElement('script');
-            script.src = 'animations.js';
-            script.type = 'module';
-            document.head.appendChild(script);
-        }
-        loadAnimations();
-    </script>
-    <script src="app.js"></script>
+    <script src="app.min.js"></script>
 </body>
 </html>

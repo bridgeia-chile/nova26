@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Lazy Loading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .image-container {
+            margin-bottom: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prueba de Lazy Loading</h1>
+    <p>Esta página prueba la implementación de lazy loading para imágenes.</p>
+
+    <div class="image-container">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%2300e5ff'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='20'%3ENova26 Dashboard%3C/text%3E%3C/svg%3E"
+             alt="Nova26 Dashboard Preview"
+             loading="lazy"
+             width="400"
+             height="300">
+    </div>
+
+    <div class="image-container">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='100%25' height='100%25' fill='%23666'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='18'%3EAgent Interface%3C/text%3E%3C/svg%3E"
+             alt="Interfaz de Agente"
+             loading="lazy"
+             width="400"
+             height="300">
+    </div>
+
+    <script>
+        // Verificar que el lazy loading esté funcionando
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Lazy loading activado para imágenes');
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            console.log(`Se encontraron ${images.length} imágenes con lazy loading`);
+        });
+    </script>
+</body>
+</html>

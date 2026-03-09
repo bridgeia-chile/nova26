@@ -1,0 +1,138 @@
+/* Responsive Grid System */
+@media (max-width: 1440px) {
+    .agents-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 200px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 95vh;
+    }
+
+    .glass-nav {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .logo-area {
+        margin-bottom: 0;
+    }
+
+    nav {
+        flex-grow: 0;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .nav-item {
+        padding: 8px 12px;
+        margin-bottom: 0;
+    }
+
+    .content-area {
+        width: 100%;
+    }
+
+    .main-split {
+        grid-template-columns: 1fr;
+    }
+
+    .agents-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .agents-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 180px);
+    }
+
+    .global-info-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .info-pill {
+        font-size: 0.7rem;
+        padding: 4px 12px;
+    }
+
+    .models-settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        width: 95vw;
+        height: 85vh;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1rem;
+    }
+
+    .nav-item {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+
+    .agent-card {
+        padding: 12px;
+    }
+
+    .agent-name {
+        font-size: 0.85rem;
+    }
+
+    .metric-label, .metric-value {
+        font-size: 0.6rem;
+    }
+
+    .chat-messages {
+        padding: 15px;
+    }
+
+    .msg {
+        max-width: 95%;
+        font-size: 0.85rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .background-blobs, .glass-nav, .top-bar, .chat-input-area, .activity-log {
+        display: none !important;
+    }
+
+    .content-area {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .agent-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 15px;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .glass-card {
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+    }
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaGravity Animations Demo</title>
+    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .demo-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-section h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .floating-demo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent), #0055ff);
+            border-radius: 20px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 NovaGravity Animations Demo</h1>
+
+    <!-- Scroll Reveal Demo -->
+    <div class="demo-section" data-scroll-reveal>
+        <h2>1. Scroll Reveal Animations</h2>
+        <p>Elements fade in and slide up as you scroll down the page.</p>
+        <div class="demo-grid">
+            <div class="demo-card" data-scroll-reveal="" data-delay="100">
+                <h3>Card 1</h3>
+                <p>This card has scroll reveal animation with 100ms delay.</p>
+            </div>
+            <div class="demo-card" data-scroll-reveal="" data-delay="200">
+                <h3>Card 2</h3>
+                <p>This card has scroll reveal animation with 200ms delay.</p>
+            </div>
+            <div class="demo-card" data-scroll-reveal="" data-delay="300">
+                <h3>Card 3</h3>
+                <p>This card has scroll reveal animation with 300ms delay.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accordion Demo -->
+    <div class="demo-section" data-scroll-reveal>
+        <h2>2. Accordion (FAQ)</h2>
+        <p>Interactive accordion component for FAQ sections.</p>
+        <div id="faq-accordion" class="demo-grid">
+            <!-- FAQ items will be injected by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Hover Effects Demo -->
+    <div class="demo-section" data-scroll-reveal>
+        <h2>3. Advanced Hover Effects</h2>
+        <p>Buttons and cards with advanced hover animations.</p>
+        <div class="demo-grid">
+            <button class="btn-hover gradient-btn" style="padding: 15px 30px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600;">
+                Hover Me - Ripple Effect
+            </button>
+            <div class="demo-card card-hover">
+                <h3>Hover Card</h3>
+                <p>Move your mouse over this card to see 3D tilt effect.</p>
+            </div>
+            <button class="btn-hover" style="padding: 15px 30px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; background: var(--accent);">
+                Click Me
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Animations Demo -->
+    <div class="demo-section" data-scroll-reveal>
+        <h2>4. Floating Animations (PODER, RTIC, C45)</h2>
+        <p>Different floating animation methods applied to elements.</p>
+        <div class="demo-grid">
+            <div class="demo-card">
+                <div class="floating-demo floating-poder">PODER</div>
+                <p>Parabolic Organic Dynamic Elevation Rotation</p>
+            </div>
+            <div class="demo-card">
+                <div class="floating-demo floating-rtic">RTIC</div>
+                <p>Rotational Time-Independent Circular</p>
+            </div>
+            <div class="demo-card">
+                <div class="floating-demo floating-c45">C45</div>
+                <p>Chaotic 45-degree Multi-axis</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smooth Transitions Demo -->
+    <div class="demo-section" data-scroll-reveal>
+        <h2>5. Smooth Section Transitions</h2>
+        <p>Smooth transitions between different sections of the page.</p>
+        <div class="demo-grid">
+            <button id="transition-btn" class="btn-hover" style="padding: 15px 30px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; background: rgba(0, 255, 136, 0.3);">
+                Test View Transition (Modern Browsers)
+            </button>
+            <div class="demo-card section-transition">
+                <h3>Transition Target</h3>
+                <p>This element will fade in smoothly when triggered.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="animations.js" type="module"></script>
+    <script>
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create FAQ accordion
+            const faqData = [
+                {
+                    question: "¿Qué es NovaGravity?",
+                    answer: "NovaGravity es una plataforma avanzada de inteligencia artificial que permite gestionar múltiples agentes de IA con capacidades de procesamiento distribuido y aprendizaje continuo."
+                },
+                {
+                    question: "¿Cómo funcionan las animaciones?",
+                    answer: "Las animaciones utilizan JavaScript moderno con técnicas de optimización de rendimiento como will-change, transformaciones 3D y solicitudes de animación eficientes."
+                },
+                {
+                    question: "¿Es compatible con móviles?",
+                    answer: "Sí, todas las animaciones y componentes son completamente responsivos y están optimizados para dispositivos móviles con toques y gestos."
+                },
+                {
+                    question: "¿Puedo personalizar las animaciones?",
+                    answer: "Absolutamente, el sistema de animaciones está diseñado con parámetros configurables para velocidad, amplitud, dirección y más."
+                }
+            ];
+
+            const accordion = new Accordion('#faq-accordion');
+            Accordion.createFAQ('#faq-accordion', faqData);
+
+            // Initialize all animations
+            initNovaAnimations();
+
+            // Add click handler for transition button
+            document.getElementById('transition-btn').addEventListener('click', function() {
+                const target = document.querySelector('.section-transition');
+                target.classList.add('visible');
+
+                setTimeout(() => {
+                    target.classList.remove('visible');
+                }, 2000);
+            });
+
+            console.log('NovaGravity Animations Demo Ready!');
+        });
+    </script>
+</body>
+</html>
