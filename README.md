@@ -32,19 +32,16 @@ Copia el archivo de ejemplo y configura tus claves API:
 ```bash
 cp .env.example .env
 ```
-Abre el archivo `.env` y asegúrate de agregar al menos una clave API (Groq, Anthropic u OpenAI).
+Abre el archivo `.env` y asegúrate de agregar al menos una clave API (Groq, Gemini, Anthropic u OpenAI).
 - Las API Keys se cifran al inyectarse en la base de datos para mayor seguridad.
-- Si vas a usar nodos remotos, configura `PEER_NODES`.
 
-### 4. Inicializar la Base de Datos "Soul"
-Nova26 utiliza SQLite para almacenar todos sus conocimientos, configuración y estado de agentes.
+### 4. Inicialización
+Nova26 utiliza SQLite para almacenar su configuración y memorias. La base de datos se inicializa automáticamente al arrancar.
 ```bash
-# Crea nova26.db, la tabla de agentes, tokens y memoria
-python setup_db.py
-
-# (Opcional pero recomendado) Configura el sub-agente de ciberseguridad Nova Sentry
-python setup_security.py
+# Arranca el cerebro principal, el dashboard web y la terminal interactiva
+python main.py run --interface all
 ```
+*Tip: Si es la primera vez, el sistema creará `nova26.db` con la configuración por defecto.*
 
 ### 5. Configurar Servidores MCP (Herramientas Externas)
 Para que los agentes de diseño e investigación funcionen al 100%, debes registrar las herramientas MCP (Model Context Protocol):

@@ -1,0 +1,13 @@
+# Core
+fastapi
+uvicorn
+websockets
+psutil
+python-dotenv
+aiohttp
+pyyaml
+aiosqlite
+httpx
+
+# OS & Architecture (Optional)
+pynvml # Required only for NVIDIA GPU detection

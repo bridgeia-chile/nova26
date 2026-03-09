@@ -300,7 +300,8 @@ class NovaGravityBrain:
                 ('ollama:nomic-embed-text', 'ollama', 'nomic-embed-text', 'Ollama Local', 0.7, 1),
                 
                 # Ollama Cloud (Simulado o vía OpenRouter/Local Tunnel)
-                ('ollama-cloud:llama3.1:8b', 'ollama', 'llama3.1:8b', 'Ollama Cloud', 0.7, 1)
+                ('ollama-cloud:llama3.1:8b', 'ollama', 'llama3.1:8b', 'Ollama Cloud', 0.7, 1),
+                ('ollama:marcos-adaptive', 'ollama', 'marcos-adaptive', 'Ollama Adaptive', 0.7, 1)
             ]
             await self.db.conn.executemany(
                 "INSERT INTO models_config (id, provider, model_name, category, temperature, is_enabled) VALUES (?, ?, ?, ?, ?, ?)",

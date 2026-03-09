@@ -13,9 +13,23 @@ class OllamaProvider:
         self.models = config.get('models', {})
         
     async def chat(self, messages: list, complexity: str, task_model: str = None) -> dict:
+        from core.hardware import is_gpu_available
+        
         # Determine the primary model to use
         model_id = task_model if task_model else self.models.get('default', 'llama3.2:3b')
-        if not task_model and complexity == 'code':
+        
+        # Logic for Marcos adaptive model
+        is_marcos_adaptive = (model_id == "ollama:marcos-adaptive")
+        if is_marcos_adaptive:
+            if is_gpu_available():
+                # GPU detected: Use cloud model (e.g., llama3.1:8b)
+                model_id = self.models.get('cloud', 'llama3.1:8b')
+            else:
+                # No GPU: Use cloud free model (e.g., openrouter free models or similar)
+                # For Ollama provider specifically, we might use a lighter cloud model if available
+                model_id = self.models.get('cloud_free', 'llama3.1:8b') # Defaulting to same for now or specific free tag
+                
+        if not task_model and complexity == 'code' and not is_marcos_adaptive:
             model_id = self.models.get('code', model_id)
             
         start_time = time.time()
@@ -23,10 +37,14 @@ class OllamaProvider:
         try:
             return await self._execute_request(model_id, messages, start_time)
         except Exception as e:
-            # Fallback logic: If it's a "cloud" model and it fails, try the local coder model
-            if model_id and "-cloud" in model_id.lower():
+            # Fallback logic: 
+            # 1. If it's the marcos-adaptive cloud model, fall back to local coder
+            # 2. If it's any other "cloud" model and it fails, try the local coder model
+            is_cloud = (model_id and "-cloud" in model_id.lower()) or is_marcos_adaptive
+            
+            if is_cloud:
                 fallback_model = self.models.get('code', 'qwen2.5-coder:7b')
-                logging.warning(f"Ollama cloud model {model_id} failed: {str(e)}. Falling back to {fallback_model}...")
+                logging.warning(f"Ollama cloud/adaptive model {model_id} failed: {str(e)}. Falling back to {fallback_model}...")
                 return await self._execute_request(fallback_model, messages, start_time)
             raise e
 
